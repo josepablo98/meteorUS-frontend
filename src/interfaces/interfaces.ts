@@ -7,6 +7,38 @@ export interface FormProps {
   actuatorFilter: ActuatorFilter;
 }
 
+export interface FormComponentProps extends FormProps {
+  isLoading: boolean;
+  onSubmit: (event: React.FormEvent) => void;
+  onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onDateChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onInputSelectChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  onResetForm: () => void;
+}
+
+export interface InputFormProps {
+  boardId: number;
+  isBoardId: boolean;
+  startDate: string;
+  endDate: string;
+  isDate: boolean;
+  onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onDateChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+export interface SelectFormProps {
+  filter: Filter;
+  actuatorFilter: ActuatorFilter;
+  register: Register;
+  onInputSelectChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+}
+
+export interface ButtonProps {
+  isLoading: boolean;
+  onResetForm: () => void;
+  onSubmit: (event: React.FormEvent) => void;
+}
+
 export interface GetDataProps {
   boardId: number;
   startDate: string;
