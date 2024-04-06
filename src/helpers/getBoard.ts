@@ -24,7 +24,7 @@ export const getBoard = async ({ boardId, data, endDate, filter, startDate }: Ge
       try {
         const res = await fetchApiByBoardId<Board>("board", boardId);
         const formattedDate = new Date(res.timest).toISOString().split("T")[0];
-        data = { ...res, formattedDate };
+        Swal.fire("Éxito", "Se encontró un registro con el boardId: " + boardId + " con fecha de creacion: " + formattedDate, "success");
       } catch {
         Swal.fire("Error", "No se encontró ningún registro con el boardId: " + boardId, "error");
       }
@@ -53,22 +53,8 @@ export const getBoard = async ({ boardId, data, endDate, filter, startDate }: Ge
       }
       break;
     }
-
-    case "Mostrar por boardId y fecha": {
-      try {
-
-        const res = await fetchApiByBoardId<Board>("board", boardId);
-        const formattedDate = new Date(res.timest).toISOString().split("T")[0];
-        if (!(formattedDate >= startDate && formattedDate <= endDate)) {
-          Swal.fire("Error", "No se encontró ningún registro con fecha de inicio: " + startDate + " y fecha de fin: " + endDate, "error");
-          break;
-        }
-        data = { ...res, formattedDate };
-      } catch {
-        Swal.fire("Error", "No se encontró ningún registro con el boardId: " + boardId, "error");
-      }
+    default:
       break;
-    }
   }
   return data;
 }

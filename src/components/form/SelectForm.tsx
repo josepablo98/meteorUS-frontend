@@ -1,6 +1,6 @@
 import { SelectFormProps } from "../../interfaces"
 
-export const SelectForm = ({ filter, actuatorFilter, register, onInputSelectChange } : SelectFormProps) => {
+export const SelectForm = ({ filter, actuatorFilter, register, onInputSelectChange }: SelectFormProps) => {
   return (
     <div className="row">
       <div className="col-md-4">
@@ -14,7 +14,7 @@ export const SelectForm = ({ filter, actuatorFilter, register, onInputSelectChan
         </select>
       </div>
       {
-        register !== "-" && (
+        (register !== "-" && register !== "Registros de placas") && (
           <div className="col-md-4">
             <label>Filtros:</label>
             <select className="form-control" name="filter" onChange={onInputSelectChange} value={filter}>
@@ -22,6 +22,18 @@ export const SelectForm = ({ filter, actuatorFilter, register, onInputSelectChan
               <option>Mostrar por boardId</option>
               <option>Mostrar por fecha</option>
               <option>Mostrar por boardId y fecha</option>
+            </select>
+          </div>
+        )
+      }
+      {
+        register === "Registros de placas" && (
+          <div className="col-md-4">
+            <label>Filtros:</label>
+            <select className="form-control" name="filter" onChange={onInputSelectChange} value={filter}>
+              <option>Mostrar todo</option>
+              <option>Mostrar por boardId</option>
+              <option>Mostrar por fecha</option>
             </select>
           </div>
         )

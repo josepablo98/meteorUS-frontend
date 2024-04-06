@@ -164,6 +164,8 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
       }
       break;
     }
+    default:
+      break;
   }
   return data;
 }

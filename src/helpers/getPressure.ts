@@ -74,6 +74,8 @@ export const getPressure = async ({ boardId, data, endDate, filter, startDate } 
       }
       break;
     }
+    default:
+      break;
   }
   return data;
 }
