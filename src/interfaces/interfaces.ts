@@ -14,6 +14,7 @@ export interface FormComponentProps extends FormProps {
   onDateChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onInputSelectChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
   onResetForm: () => void;
+  onTableReset: () => void;
 }
 
 export interface InputFormProps {
@@ -36,7 +37,12 @@ export interface SelectFormProps {
 export interface ButtonProps {
   isLoading: boolean;
   onResetForm: () => void;
+  onTableReset: () => void;
   onSubmit: (event: React.FormEvent) => void;
+}
+
+export interface TableProps {
+  data: DataProps;
 }
 
 export interface GetDataProps {
@@ -120,7 +126,14 @@ export interface ActuatorFormatted {
   formattedDate: string;
 }
 
-export type DataProps = BoardFormatted | BoardFormatted[] | TemperatureFormatted[] | PressureFormatted[] | ActuatorFormatted[];
+export interface ColumnProps {
+  title: string;
+  key: string;
+}
+
+export type DataProps = BoardFormatted[] | TemperatureFormatted[] | PressureFormatted[] | ActuatorFormatted[];
+
+export type DataSimpleProps = BoardFormatted | TemperatureFormatted | PressureFormatted | ActuatorFormatted;
 
 export type EndPoint = "board" | "temphum" | "pressure" | "actuator";
 

@@ -1,9 +1,10 @@
 import "./styles.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "./hooks/useForm";
 import { ActuatorFormatted, BoardFormatted, DataProps, FormProps, PressureFormatted, TemperatureFormatted } from "./interfaces";
 import { getBoard, getTempHum, getActuator, getPressure } from "./helpers";
 import { Form } from "./components/Form";
+import { Table } from "./components/Table";
 
 
 
@@ -26,6 +27,9 @@ export const App = () => {
   const [data, setData] = useState<DataProps>([])
   const [isLoading, setIsLoading] = useState(false);
 
+  const onTableReset = () => {
+    setData([]);
+  }
 
   const onSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -36,7 +40,7 @@ export const App = () => {
       case "Registros de placas":
         getBoard({ boardId, data, endDate, filter, startDate })
           .then((result) => {
-            setData(result as BoardFormatted[] | BoardFormatted)
+            setData(result as BoardFormatted[])
           })
           .catch((error) => console.error(error))
         break;
@@ -66,14 +70,10 @@ export const App = () => {
     setIsLoading(false);
 
   }
-  useEffect(() => {
-    console.table(data)
-  }, [data])
-
 
   return (
     <div className="app container">
-      <h1 className="text-center mt-4">MeteorUS</h1>
+      <img src="./meteorUS_Logo.png"/>
       <h3 className="text-center mt-2">Una aplicacion para consultar valores meteorológicos</h3>
       <Form
         actuatorFilter={actuatorFilter}
@@ -88,7 +88,13 @@ export const App = () => {
         onSubmit={onSubmit}
         register={register}
         startDate={startDate}
+        onTableReset={onTableReset}
       />
+      {
+        data.length > 0 && (
+          <Table data={data} /> 
+        )
+      }
     </div>
   )
 }

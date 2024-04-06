@@ -4,7 +4,7 @@ import { InputForm } from "./form/InputForm";
 import { SelectForm } from "./form/SelectForm";
 import { ButtonForm } from "./form/ButtonForm";
 
-export const Form = ({ actuatorFilter, boardId, endDate, filter, onSubmit, register, startDate, isLoading, onDateChange, onInputChange, onInputSelectChange, onResetForm }: FormComponentProps) => {
+export const Form = ({ actuatorFilter, boardId, endDate, filter, onSubmit, register, startDate, isLoading, onDateChange, onInputChange, onInputSelectChange, onResetForm, onTableReset }: FormComponentProps) => {
 
   const [isDate, setIsDate] = useState(false);
   const [isBoardId, setIsBoardId] = useState(false);
@@ -36,7 +36,7 @@ export const Form = ({ actuatorFilter, boardId, endDate, filter, onSubmit, regis
 
       <SelectForm actuatorFilter={actuatorFilter} filter={filter} onInputSelectChange={onInputSelectChange} register={register} />
 
-      <ButtonForm isLoading={isLoading} onResetForm={onResetForm} onSubmit={onSubmit} />
+      <ButtonForm isLoading={isLoading} onResetForm={onResetForm} onSubmit={onSubmit} onTableReset={onTableReset}/>
 
     </form>
   )
