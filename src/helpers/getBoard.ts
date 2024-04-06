@@ -1,5 +1,5 @@
-import { fetchApiAll, fetchApiByBoardId } from "../../api";
-import { Board, GetDataProps } from "../../interfaces";
+import { fetchApiAll, fetchApiByBoardId } from "../api";
+import { Board, GetDataProps } from "../interfaces";
 import Swal from "sweetalert2"
 
 

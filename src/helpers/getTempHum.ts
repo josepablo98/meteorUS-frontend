@@ -1,5 +1,5 @@
-import { fetchApiAll, fetchApiByBoardId } from "../../api";
-import { GetDataProps, Temperature } from "../../interfaces";
+import { fetchApiAll, fetchApiByBoardId } from "../api";
+import { GetDataProps, Temperature } from "../interfaces";
 import Swal from "sweetalert2";
 
 export const getTempHum = async ({ boardId, data, endDate, filter, startDate } : GetDataProps) => {

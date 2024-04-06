@@ -2,7 +2,7 @@ import "./styles.css";
 import { useEffect, useState } from "react";
 import { useForm } from "./hooks/useForm";
 import { ActuatorFormatted, BoardFormatted, DataProps, FormProps, PressureFormatted, TemperatureFormatted } from "./interfaces";
-import { getData } from "./helpers";
+import { getBoard, getTempHum, getActuator, getPressure } from "./helpers";
 
 
 
@@ -35,23 +35,36 @@ export const App = () => {
 
     setIsLoading(true);
 
-    getData({ register, filter, actuatorFilter, boardId, startDate, endDate })
-      .then((result) => {
-        switch (register) {
-          case "Registros de placas":
-            setData(result as BoardFormatted[]);
-            break;
-          case "Registros de temperaturas y humedad":
-            setData(result as TemperatureFormatted[]);
-            break;
-          case "Registros de presion y altitud":
-            setData(result as PressureFormatted[]);
-            break;
-          case "Registros de actuadores":
-            setData(result as ActuatorFormatted[]);
-            break;
-        }
-      });
+    switch (register) {
+      case "Registros de placas":
+        getBoard({ boardId, data, endDate, filter, startDate })
+          .then((result) => {
+            setData(result as BoardFormatted[] | BoardFormatted)
+          })
+          .catch((error) => console.error(error))
+        break;
+      case "Registros de temperaturas y humedad":
+        getTempHum({ boardId, data, endDate, filter, startDate })
+          .then((result) => {
+            setData(result as TemperatureFormatted[])
+          })
+          .catch((error) => console.error(error))
+        break;
+      case "Registros de presion y altitud":
+        getPressure({ boardId, data, endDate, filter, startDate })
+          .then((result) => {
+            setData(result as PressureFormatted[])
+          })
+          .catch((error) => console.error(error))
+        break;
+      case "Registros de actuadores":
+        getActuator({ boardId, data, endDate, filter, startDate, actuatorFilter })
+          .then((result) => {
+            setData(result as ActuatorFormatted[])
+          })
+          .catch((error) => console.error(error))
+        break;
+    }
 
     setIsLoading(false);
 
@@ -59,7 +72,7 @@ export const App = () => {
   useEffect(() => {
     console.table(data)
   }, [data])
-  
+
 
   useEffect(() => {
     switch (filter) {

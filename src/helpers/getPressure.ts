@@ -1,6 +1,6 @@
 import Swal from "sweetalert2";
-import { GetDataProps, Pressure } from "../../interfaces";
-import { fetchApiAll, fetchApiByBoardId } from "../../api";
+import { GetDataProps, Pressure } from "../interfaces";
+import { fetchApiAll, fetchApiByBoardId } from "../api";
 
 
 

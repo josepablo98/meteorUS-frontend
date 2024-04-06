@@ -1,9 +1,9 @@
 import Swal from 'sweetalert2';
-import { Actuator, GetDataProps } from './../../interfaces';
-import { fetchApiAll, fetchApiByBoardId } from './../../api';
+import { Actuator, GetDataProps } from '../interfaces';
+import { fetchApiAll, fetchApiByBoardId } from '../api';
 
-export const getActuator = async ({ boardId, data, endDate, filter, startDate, actuatorFilter } : GetDataProps) => {
-  switch(filter) {
+export const getActuator = async ({ boardId, data, endDate, filter, startDate, actuatorFilter }: GetDataProps) => {
+  switch (filter) {
     case "Mostrar todo": {
       try {
         const res = await fetchApiAll<Actuator[]>("actuator");
@@ -11,7 +11,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
           const formattedDate = new Date(actuator.timest).toISOString().split("T")[0];
           return { ...actuator, formattedDate };
         })
-        switch(actuatorFilter) {
+        switch (actuatorFilter) {
           case "Mostrar todo": {
             data = dataFormatted;
             break;
@@ -47,7 +47,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
           const formattedDate = new Date(actuator.timest).toISOString().split("T")[0];
           return { ...actuator, formattedDate };
         })
-        switch(actuatorFilter) {
+        switch (actuatorFilter) {
           case "Mostrar todo": {
             data = dataFormatted;
             break;
@@ -83,7 +83,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
           const formattedDate = new Date(actuator.timest).toISOString().split("T")[0];
           return formattedDate >= startDate && formattedDate <= endDate;
         })
-        if(filterData.length === 0) {
+        if (filterData.length === 0) {
           Swal.fire("Error", "No se encontró ningún registro con fecha de inicio: " + startDate + " y fecha de fin: " + endDate, "error");
           break;
         }
@@ -91,7 +91,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
           const formattedDate = new Date(actuator.timest).toISOString().split("T")[0];
           return { ...actuator, formattedDate };
         })
-        switch(actuatorFilter) {
+        switch (actuatorFilter) {
           case "Mostrar todo": {
             data = dataFormatted;
             break;
@@ -127,7 +127,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
           const formattedDate = new Date(actuator.timest).toISOString().split("T")[0];
           return formattedDate >= startDate && formattedDate <= endDate;
         })
-        if(filterData.length === 0) {
+        if (filterData.length === 0) {
           Swal.fire("Error", "No se encontró ningún registro con fecha de inicio: " + startDate + " y fecha de fin: " + endDate, "error");
           break;
         }
@@ -135,7 +135,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
           const formattedDate = new Date(actuator.timest).toISOString().split("T")[0];
           return { ...actuator, formattedDate };
         })
-        switch(actuatorFilter) {
+        switch (actuatorFilter) {
           case "Mostrar todo": {
             data = dataFormatted;
             break;
