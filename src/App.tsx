@@ -1,10 +1,13 @@
 import "./styles.css";
-import { useState } from "react";
-import { useForm } from "./hooks/useForm";
+import { useEffect, useState } from "react";
 import { ActuatorFormatted, BoardFormatted, DataProps, FormProps, PressureFormatted, TemperatureFormatted } from "./interfaces";
 import { getBoard, getTempHum, getActuator, getPressure } from "./helpers";
 import { Form } from "./components/Form";
 import { Table } from "./components/Table";
+import Swal from "sweetalert2";
+import { formSchema } from "./schemas";
+import { Graphic } from "./components/Graphic";
+import { useFormik } from "formik";
 
 
 
@@ -12,31 +15,78 @@ export const App = () => {
 
   const initialForm: FormProps = {
     register: "-",
-    filter: "Mostrar todo",
-    boardId: 0,
-    startDate: "",
-    endDate: "",
-    actuatorFilter: "Mostrar todo"
+    filter: "-",
+    boardId: 1,
+    startDate: null,
+    endDate: null,
+    actuatorFilter: "-"
   }
-
-
-  const { onInputChange, onDateChange, onInputSelectChange, onResetForm, formState } = useForm<FormProps>(initialForm);
-
-  const { register, actuatorFilter, boardId, endDate, filter, startDate } = formState;
 
   const [data, setData] = useState<DataProps>([])
   const [isLoading, setIsLoading] = useState(false);
+  const [isGraphic, setIsGraphic] = useState(false);
+  const [isDate, setIsDate] = useState(false);
+  const [isBoardId, setIsBoardId] = useState(false);
+  
 
+  const { values, handleSubmit, handleReset, errors, touched, getFieldProps } = useFormik({
+    initialValues: initialForm,
+    validationSchema: formSchema({isBoardId, isDate}),
+    onSubmit: (values: FormProps) => {
+      handleSubmitFunction(values);
+    },
+    validateOnBlur: true,
+  })
+
+
+  useEffect(() => {
+
+    if (values.register === "-") {
+      setIsDate(true);
+      setIsBoardId(true);
+      return;
+    }
+
+    switch (values.filter) {
+      case "Mostrar todo":
+        setIsDate(true);
+        setIsBoardId(true);
+        break;
+      case "Mostrar por boardId":
+        setIsDate(true);
+        setIsBoardId(false);
+        break;
+      case "Mostrar por fecha":
+        setIsDate(false);
+        setIsBoardId(true);
+        break;
+      case "Mostrar por boardId y fecha":
+        if (values.register !== "Registros de placas") {
+          setIsDate(false);
+          setIsBoardId(false);
+        } else {
+          setIsBoardId(true);
+          setIsDate(true);
+        }
+        break;
+    }
+  }, [values.register, values.filter])
   const onTableReset = () => {
     setData([]);
   }
 
-  const onSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
+  const onToggleGraphic = () => {
+    setIsGraphic(!isGraphic);
+  }
+
+  const handleSubmitFunction = (values : FormProps) => {
+    
 
     setIsLoading(true);
+    const { boardId, endDate, filter, startDate, actuatorFilter } = values;
 
-    switch (register) {
+    switch (values.register) {
+      
       case "Registros de placas":
         getBoard({ boardId, data, endDate, filter, startDate })
           .then((result) => {
@@ -65,6 +115,8 @@ export const App = () => {
           })
           .catch((error) => console.error(error))
         break;
+      case "-":
+          Swal.fire("Error", "Por favor, seleccione un tipo de registro", "info");
     }
 
     setIsLoading(false);
@@ -76,23 +128,27 @@ export const App = () => {
       <img src="./meteorUS_Logo.png"/>
       <h3 className="text-center mt-2">Una aplicacion para consultar valores meteorológicos</h3>
       <Form
-        actuatorFilter={actuatorFilter}
-        boardId={boardId}
-        endDate={endDate}
-        filter={filter}
+        values={values}
         isLoading={isLoading}
-        onDateChange={onDateChange}
-        onInputChange={onInputChange}
-        onInputSelectChange={onInputSelectChange}
-        onResetForm={onResetForm}
-        onSubmit={onSubmit}
-        register={register}
-        startDate={startDate}
+        onSubmit={handleSubmit}
+        errors={errors}
+        touched={touched}
+        getFieldProps={getFieldProps}
+        onResetForm={handleReset}
+        data={data}
         onTableReset={onTableReset}
+        onToggleGraphic={onToggleGraphic}
+        isBoardId={isBoardId}
+        isDate={isDate}
       />
       {
-        data.length > 0 && (
+        (data.length > 0 && !isGraphic) && (
           <Table data={data} /> 
+        )
+      }
+      {
+        (data.length > 0 && isGraphic) && (
+          <Graphic data={data}/>
         )
       }
     </div>

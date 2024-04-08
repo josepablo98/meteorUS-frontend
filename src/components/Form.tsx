@@ -1,42 +1,16 @@
-import { useEffect, useState } from "react";
 import { FormComponentProps } from "../interfaces"
 import { InputForm } from "./form/InputForm";
 import { SelectForm } from "./form/SelectForm";
 import { ButtonForm } from "./form/ButtonForm";
 
-export const Form = ({ actuatorFilter, boardId, endDate, filter, onSubmit, register, startDate, isLoading, onDateChange, onInputChange, onInputSelectChange, onResetForm, onTableReset }: FormComponentProps) => {
-
-  const [isDate, setIsDate] = useState(false);
-  const [isBoardId, setIsBoardId] = useState(false);
-
-  useEffect(() => {
-    switch (filter) {
-      case "Mostrar todo":
-        setIsDate(true);
-        setIsBoardId(true);
-        break;
-      case "Mostrar por boardId":
-        setIsDate(true);
-        setIsBoardId(false);
-        break;
-      case "Mostrar por fecha":
-        setIsDate(false);
-        setIsBoardId(true);
-        break;
-      case "Mostrar por boardId y fecha":
-        setIsDate(false);
-        setIsBoardId(false);
-        break;
-    }
-  }, [filter])
-
+export const Form = ({ data, errors, getFieldProps, isLoading, onResetForm, onSubmit, onTableReset, onToggleGraphic, touched, values, isBoardId, isDate }: FormComponentProps) => {
   return (
-    <form>
-      <InputForm boardId={boardId} endDate={endDate} isBoardId={isBoardId} isDate={isDate} onDateChange={onDateChange} onInputChange={onInputChange} startDate={startDate} />
+    <form onSubmit={(e) => e.preventDefault()}>
+      <InputForm getFieldProps={getFieldProps} errors={errors} touched={touched} isBoardId={isBoardId} isDate={isDate} />
 
-      <SelectForm actuatorFilter={actuatorFilter} filter={filter} onInputSelectChange={onInputSelectChange} register={register} />
+      <SelectForm getFieldProps={getFieldProps} errors={errors} touched={touched} register={values.register} />
 
-      <ButtonForm isLoading={isLoading} onResetForm={onResetForm} onSubmit={onSubmit} onTableReset={onTableReset}/>
+      <ButtonForm isLoading={isLoading} data={data} onResetForm={onResetForm} onSubmit={onSubmit} onToggleGraphic={onToggleGraphic} onTableReset={onTableReset} />
 
     </form>
   )

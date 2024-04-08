@@ -1,44 +1,61 @@
+import { FieldConfig, FieldInputProps, FormikErrors, FormikTouched } from "formik";
+
 export interface FormProps {
   boardId: number;
-  startDate: string;
-  endDate: string;
+  startDate: Date | null;
+  endDate: Date | null;
   register: Register;
   filter: Filter;
   actuatorFilter: ActuatorFilter;
 }
 
-export interface FormComponentProps extends FormProps {
+export interface ErrorProps {
+  error: string;
+  message: string;
+}
+
+export interface FormComponentProps {
+  values: FormProps;
+  errors: FormikErrors<FormProps>;
+  touched: FormikTouched<FormProps>;
   isLoading: boolean;
-  onSubmit: (event: React.FormEvent) => void;
-  onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onDateChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onInputSelectChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-  onResetForm: () => void;
+  data: DataProps;
+  isBoardId: boolean;
+  isDate: boolean;
+  getFieldProps: (nameOrOptions: string | FieldConfig<FormProps>) => FieldInputProps<FormProps>;
+  onSubmit: (e?: React.FormEvent<HTMLFormElement> | undefined) => void;
+  onResetForm: (e: any) => void;
   onTableReset: () => void;
+  onToggleGraphic: () => void;
 }
 
 export interface InputFormProps {
-  boardId: number;
+  touched: FormikTouched<FormProps>;
+  errors: FormikErrors<FormProps>;
   isBoardId: boolean;
-  startDate: string;
-  endDate: string;
   isDate: boolean;
-  onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onDateChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  getFieldProps: (nameOrOptions: string | FieldConfig<FormProps>) => FieldInputProps<FormProps>;
 }
 
 export interface SelectFormProps {
-  filter: Filter;
-  actuatorFilter: ActuatorFilter;
+  errors: FormikErrors<FormProps>;
   register: Register;
-  onInputSelectChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  touched: FormikTouched<FormProps>;
+  getFieldProps: (nameOrOptions: string | FieldConfig<FormProps>) => FieldInputProps<FormProps>;
 }
 
 export interface ButtonProps {
+  data: DataProps;
   isLoading: boolean;
-  onResetForm: () => void;
+  onSubmit: (e?: React.FormEvent<HTMLFormElement> | undefined) => void;
+  onResetForm: (e: any) => void;
+  onToggleGraphic: () => void;
   onTableReset: () => void;
-  onSubmit: (event: React.FormEvent) => void;
+}
+
+export interface SchemaProps {
+  isBoardId: boolean;
+  isDate: boolean;
 }
 
 export interface TableProps {
@@ -47,8 +64,8 @@ export interface TableProps {
 
 export interface GetDataProps {
   boardId: number;
-  startDate: string;
-  endDate: string;
+  startDate: Date | null;
+  endDate: Date | null;
   filter: Filter;
   data: DataProps;
   actuatorFilter?: ActuatorFilter;
@@ -131,6 +148,10 @@ export interface ColumnProps {
   key: string;
 }
 
+export interface GraphicProps {
+  data: DataProps;
+}
+
 export type DataProps = BoardFormatted[] | TemperatureFormatted[] | PressureFormatted[] | ActuatorFormatted[];
 
 export type DataSimpleProps = BoardFormatted | TemperatureFormatted | PressureFormatted | ActuatorFormatted;
@@ -139,6 +160,8 @@ export type EndPoint = "board" | "temphum" | "pressure" | "actuator";
 
 export type Register = "Registros de placas" | "Registros de temperaturas y humedad" | "Registros de presion y altitud" | "Registros de actuadores" | "-";
 
-export type Filter = "Mostrar todo" | "Mostrar por boardId" | "Mostrar por fecha" | "Mostrar por boardId y fecha";
+export type Filter = "Mostrar todo" | "Mostrar por boardId" | "Mostrar por fecha" | "Mostrar por boardId y fecha" | "-";
 
-export type ActuatorFilter = "Mostrar todo" | "Mostrar por calor" | "Mostrar por frio";
+export type ActuatorFilter = "Mostrar todo" | "Mostrar por calor" | "Mostrar por frio" | "-";
+
+export type Selects = Register | Filter | ActuatorFilter;

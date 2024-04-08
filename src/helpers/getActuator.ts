@@ -8,7 +8,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
       try {
         const res = await fetchApiAll<Actuator[]>("actuator");
         const dataFormatted = res.map((actuator) => {
-          const formattedDate = new Date(actuator.timest).toISOString().split("T")[0];
+          const formattedDate = new Date(actuator.timest).toLocaleDateString("es-ES");
           return { ...actuator, formattedDate };
         })
         switch (actuatorFilter) {
@@ -34,6 +34,12 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
             data = filterData;
             break;
           }
+          case "-": {
+            Swal.fire("Error", "Por favor, seleccione un filtro de actuador", "info");
+            break;
+          }
+          default:
+            break;
         }
       } catch {
         Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator", "error");
@@ -44,7 +50,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
       try {
         const res = await fetchApiByBoardId<Actuator[]>("actuator", boardId);
         const dataFormatted = res.map((actuator) => {
-          const formattedDate = new Date(actuator.timest).toISOString().split("T")[0];
+          const formattedDate = new Date(actuator.timest).toLocaleDateString("es-ES");
           return { ...actuator, formattedDate };
         })
         switch (actuatorFilter) {
@@ -70,6 +76,12 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
             data = filterData;
             break;
           }
+          case "-": {
+            Swal.fire("Error", "Por favor, seleccione un filtro de actuador", "info");
+            break;
+          }
+          default:
+            break;
         }
       } catch {
         Swal.fire("Error", "No se encontró ningún registro con el boardId: " + boardId, "error");
@@ -81,14 +93,14 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
         const res = await fetchApiAll<Actuator[]>("actuator");
         const filterData = res.filter((actuator) => {
           const formattedDate = new Date(actuator.timest).toISOString().split("T")[0];
-          return formattedDate >= startDate && formattedDate <= endDate;
+          return formattedDate >= String(startDate) && formattedDate <= String(endDate);
         })
         if (filterData.length === 0) {
           Swal.fire("Error", "No se encontró ningún registro con fecha de inicio: " + startDate + " y fecha de fin: " + endDate, "error");
           break;
         }
         const dataFormatted = filterData.map((actuator) => {
-          const formattedDate = new Date(actuator.timest).toISOString().split("T")[0];
+          const formattedDate = new Date(actuator.timest).toLocaleDateString("es-ES");
           return { ...actuator, formattedDate };
         })
         switch (actuatorFilter) {
@@ -114,6 +126,12 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
             data = filterData;
             break;
           }
+          case "-": {
+            Swal.fire("Error", "Por favor, seleccione un filtro de actuador", "info");
+            break;
+          }
+          default:
+            break;
         }
       } catch {
         Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator", "error");
@@ -125,14 +143,14 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
         const res = await fetchApiByBoardId<Actuator[]>("actuator", boardId);
         const filterData = res.filter((actuator) => {
           const formattedDate = new Date(actuator.timest).toISOString().split("T")[0];
-          return formattedDate >= startDate && formattedDate <= endDate;
+          return formattedDate >= String(startDate) && formattedDate <= String(endDate);
         })
         if (filterData.length === 0) {
           Swal.fire("Error", "No se encontró ningún registro con fecha de inicio: " + startDate + " y fecha de fin: " + endDate, "error");
           break;
         }
         const dataFormatted = filterData.map((actuator) => {
-          const formattedDate = new Date(actuator.timest).toISOString().split("T")[0];
+          const formattedDate = new Date(actuator.timest).toLocaleDateString("es-ES");
           return { ...actuator, formattedDate };
         })
         switch (actuatorFilter) {
@@ -158,14 +176,22 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
             data = filterData;
             break;
           }
+          case "-": {
+            Swal.fire("Error", "Por favor, seleccione un filtro de actuador", "info");
+            break;
+          }
+          default:
+            break;
         }
       } catch {
         Swal.fire("Error", "No se encontró ningún registro con el boardId: " + boardId, "error");
       }
       break;
     }
-    default:
+    case "-": {
+      Swal.fire("Error", "Por favor, seleccione un filtro", "info");
       break;
+    }
   }
   return data;
 }

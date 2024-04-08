@@ -7,7 +7,7 @@ export const Table = ({ data }: TableProps) => {
   const columns = [
     { title: 'ID', key: 'id' },
     { title: 'Board ID', key: 'boardId' },
-    { title: 'Formatted Date', key: 'formattedDate' },
+    { title: 'Date', key: 'formattedDate' },
     ...isTemperatureFormatted(data[0]) ? [
       { title: 'Temperature', key: 'temperature' },
       { title: 'Humidity', key: 'humidity' },

@@ -8,7 +8,7 @@ export const getTempHum = async ({ boardId, data, endDate, filter, startDate } :
       try {
         const res = await fetchApiAll<Temperature[]>("temphum");
         const dataFormatted = res.map((tempHum) => {
-          const formattedDate = new Date(tempHum.timest).toISOString().split("T")[0];
+          const formattedDate = new Date(tempHum.timest).toLocaleDateString("es-ES");
           return { ...tempHum, formattedDate };
         })
         data = dataFormatted;
@@ -21,7 +21,7 @@ export const getTempHum = async ({ boardId, data, endDate, filter, startDate } :
       try {
         const res = await fetchApiByBoardId<Temperature[]>("temphum", boardId);
         const formattedData = res.map((tempHum) => {
-          const formattedDate = new Date(tempHum.timest).toISOString().split("T")[0];
+          const formattedDate = new Date(tempHum.timest).toLocaleDateString("es-ES");
           return { ...tempHum, formattedDate };
         })
         data = formattedData;
@@ -35,14 +35,14 @@ export const getTempHum = async ({ boardId, data, endDate, filter, startDate } :
         const res = await fetchApiAll<Temperature[]>("temphum");
         const filterData = res.filter((tempHum) => {
           const formattedDate = new Date(tempHum.timest).toISOString().split("T")[0];
-          return formattedDate >= startDate && formattedDate <= endDate;
+          return formattedDate >= String(startDate) && formattedDate <= String(endDate);
         })
         if(filterData.length === 0) {
           Swal.fire("Error", "No se encontró ningún registro con fecha de inicio: " + startDate + " y fecha de fin: " + endDate, "error");
           break;
         }
         const formattedData = filterData.map((tempHum) => {
-          const formattedDate = new Date(tempHum.timest).toISOString().split("T")[0];
+          const formattedDate = new Date(tempHum.timest).toLocaleDateString("es-ES");
           return { ...tempHum, formattedDate };
         })
         data = formattedData;
@@ -56,20 +56,24 @@ export const getTempHum = async ({ boardId, data, endDate, filter, startDate } :
         const res = await fetchApiByBoardId<Temperature[]>("temphum", boardId);
         const filterData = res.filter((tempHum) => {
           const formattedDate = new Date(tempHum.timest).toISOString().split("T")[0];
-          return formattedDate >= startDate && formattedDate <= endDate;
+          return formattedDate >= String(startDate) && formattedDate <= String(endDate);
         })
         if(filterData.length === 0) {
           Swal.fire("Error", "No se encontró ningún registro con fecha de inicio: " + startDate + " y fecha de fin: " + endDate, "error");
           break;
         }
         const formattedData = filterData.map((tempHum) => {
-          const formattedDate = new Date(tempHum.timest).toISOString().split("T")[0];
+          const formattedDate = new Date(tempHum.timest).toLocaleDateString("es-ES");
           return { ...tempHum, formattedDate };
         })
         data = formattedData;
       } catch {
         Swal.fire("Error", "No se encontró ningún registro con el boardId: " + boardId, "error");
       }
+      break;
+    }
+    case "-": {
+      Swal.fire("Error", "Por favor, seleccione un filtro", "info");
       break;
     }
     default:

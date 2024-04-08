@@ -10,7 +10,7 @@ export const getPressure = async ({ boardId, data, endDate, filter, startDate } 
       try {
         const res = await fetchApiAll<Pressure[]>("pressure");
         const dataFormatted = res.map((pressure) => {
-          const formattedDate = new Date(pressure.timest).toISOString().split("T")[0];
+          const formattedDate = new Date(pressure.timest).toLocaleDateString("es-ES");
           return { ...pressure, formattedDate };
         })
         data = dataFormatted;
@@ -23,7 +23,7 @@ export const getPressure = async ({ boardId, data, endDate, filter, startDate } 
       try {
         const res = await fetchApiByBoardId<Pressure[]>("pressure", boardId);
         const dataFormatted = res.map((pressure) => {
-          const formattedDate = new Date(pressure.timest).toISOString().split("T")[0];
+          const formattedDate = new Date(pressure.timest).toLocaleDateString("es-ES");
           return { ...pressure, formattedDate };
         })
         data = dataFormatted;
@@ -37,14 +37,14 @@ export const getPressure = async ({ boardId, data, endDate, filter, startDate } 
         const res = await fetchApiAll<Pressure[]>("pressure");
         const filterData = res.filter((pressure) => {
           const formattedDate = new Date(pressure.timest).toISOString().split("T")[0];
-          return formattedDate >= startDate && formattedDate <= endDate;
+          return formattedDate >= String(startDate) && formattedDate <= String(endDate);
         })
         if(filterData.length === 0) {
           Swal.fire("Error", "No se encontró ningún registro con fecha de inicio: " + startDate + " y fecha de fin: " + endDate, "error");
           break;
         }
         const dataFormatted = filterData.map((pressure) => {
-          const formattedDate = new Date(pressure.timest).toISOString().split("T")[0];
+          const formattedDate = new Date(pressure.timest).toLocaleDateString("es-ES");
           return { ...pressure, formattedDate };
         })
         data = dataFormatted;
@@ -58,20 +58,24 @@ export const getPressure = async ({ boardId, data, endDate, filter, startDate } 
         const res = await fetchApiByBoardId<Pressure[]>("pressure", boardId);
         const filterData = res.filter((pressure) => {
           const formattedDate = new Date(pressure.timest).toISOString().split("T")[0];
-          return formattedDate >= startDate && formattedDate <= endDate;
+          return formattedDate >= String(startDate) && formattedDate <= String(endDate);
         })
         if(filterData.length === 0) {
           Swal.fire("Error", "No se encontró ningún registro con fecha de inicio: " + startDate + " y fecha de fin: " + endDate, "error");
           break;
         }
         const dataFormatted = filterData.map((pressure) => {
-          const formattedDate = new Date(pressure.timest).toISOString().split("T")[0];
+          const formattedDate = new Date(pressure.timest).toLocaleDateString("es-ES");
           return { ...pressure, formattedDate };
         })
         data = dataFormatted;
       } catch {
         Swal.fire("Error", "No se encontró ningún registro con el boardId: " + boardId, "error");
       }
+      break;
+    }
+    case "-": {
+      Swal.fire("Error", "Por favor, seleccione un filtro", "info");
       break;
     }
     default:
