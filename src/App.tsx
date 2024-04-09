@@ -2,11 +2,11 @@ import "./styles.css";
 import { useEffect, useState } from "react";
 import { ActuatorFormatted, BoardFormatted, DataProps, FormProps, PressureFormatted, TemperatureFormatted } from "./interfaces";
 import { getBoard, getTempHum, getActuator, getPressure } from "./helpers";
-import { Form } from "./components/Form";
-import { Table } from "./components/Table";
+import { Form } from "./components";
+import { Table } from "./components";
 import Swal from "sweetalert2";
 import { formSchema } from "./schemas";
-import { Graphic } from "./components/Graphic";
+import { Graphic } from "./components";
 import { useFormik } from "formik";
 
 
@@ -27,9 +27,9 @@ export const App = () => {
   const [isGraphic, setIsGraphic] = useState(false);
   const [isDate, setIsDate] = useState(false);
   const [isBoardId, setIsBoardId] = useState(false);
-  
 
-  const { values, handleSubmit, handleReset, errors, touched, getFieldProps } = useFormik({
+    
+  const { values, handleSubmit, handleReset, errors, touched, getFieldProps, setFieldValue } = useFormik({
     initialValues: initialForm,
     validationSchema: formSchema({isBoardId, isDate}),
     onSubmit: (values: FormProps) => {
@@ -134,6 +134,7 @@ export const App = () => {
         errors={errors}
         touched={touched}
         getFieldProps={getFieldProps}
+        setFieldValue={setFieldValue}
         onResetForm={handleReset}
         data={data}
         onTableReset={onTableReset}

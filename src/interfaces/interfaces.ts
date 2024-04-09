@@ -22,8 +22,11 @@ export interface FormComponentProps {
   data: DataProps;
   isBoardId: boolean;
   isDate: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  setFieldValue: (field: string, value: any, shouldValidate?: boolean | undefined) => Promise<void> | Promise<FormikErrors<FormProps>>;
   getFieldProps: (nameOrOptions: string | FieldConfig<FormProps>) => FieldInputProps<FormProps>;
   onSubmit: (e?: React.FormEvent<HTMLFormElement> | undefined) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onResetForm: (e: any) => void;
   onTableReset: () => void;
   onToggleGraphic: () => void;
@@ -41,6 +44,8 @@ export interface SelectFormProps {
   errors: FormikErrors<FormProps>;
   register: Register;
   touched: FormikTouched<FormProps>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  setFieldValue: (field: string, value: any, shouldValidate?: boolean | undefined) => Promise<void> | Promise<FormikErrors<FormProps>>;
   getFieldProps: (nameOrOptions: string | FieldConfig<FormProps>) => FieldInputProps<FormProps>;
 }
 
@@ -48,6 +53,7 @@ export interface ButtonProps {
   data: DataProps;
   isLoading: boolean;
   onSubmit: (e?: React.FormEvent<HTMLFormElement> | undefined) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onResetForm: (e: any) => void;
   onToggleGraphic: () => void;
   onTableReset: () => void;
