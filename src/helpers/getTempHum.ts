@@ -72,10 +72,6 @@ export const getTempHum = async ({ boardId, data, endDate, filter, startDate } :
       }
       break;
     }
-    case "-": {
-      Swal.fire("Error", "Por favor, seleccione un filtro", "info");
-      break;
-    }
     default:
       break;
   }

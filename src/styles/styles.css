@@ -1,0 +1,81 @@
+@media (max-width: 1535px) {
+  button {
+    width: 80%;
+    /* Ajusta este valor según tus necesidades */
+    margin-top: 30px;
+    margin-left: 0;
+  }
+
+  .my-btn .col-md-2 {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .my-btn {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .clean-btn,
+  .table-btn,
+  .graphic-btn {
+    margin-left: 0;
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+form>* {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+form,
+.content-table {
+  width: 100%;
+}
+
+button {
+  margin-top: 20px;
+}
+
+span {
+  color: rgb(217, 26, 26);
+}
+
+img {
+  display: block;
+  margin: 0 auto;
+  width: 30%;
+  height: 30%;
+}
+
+.form-table-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.clean-btn {
+  margin-left: -105px;
+}
+
+.table-btn {
+  margin-left: -195px;
+}
+
+.graphic-btn {
+  margin-left: -280px;
+}
+
+
+

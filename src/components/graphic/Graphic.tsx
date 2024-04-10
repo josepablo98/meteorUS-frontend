@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Chart, LineController, LineElement, PointElement, LinearScale, CategoryScale, Title, Tooltip, Legend } from 'chart.js';
-import { formatDataForChart } from '../helpers';
-import { GraphicProps } from '../interfaces';
+import { formatDataForChart } from '../../helpers';
+import { GraphicProps } from '../../interfaces';
 
 // Registra los elementos necesarios
 Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Title, Tooltip, Legend);

@@ -34,10 +34,6 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
             data = filterData;
             break;
           }
-          case "-": {
-            Swal.fire("Error", "Por favor, seleccione un filtro de actuador", "info");
-            break;
-          }
           default:
             break;
         }
@@ -74,10 +70,6 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
               break;
             }
             data = filterData;
-            break;
-          }
-          case "-": {
-            Swal.fire("Error", "Por favor, seleccione un filtro de actuador", "info");
             break;
           }
           default:
@@ -126,10 +118,6 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
             data = filterData;
             break;
           }
-          case "-": {
-            Swal.fire("Error", "Por favor, seleccione un filtro de actuador", "info");
-            break;
-          }
           default:
             break;
         }
@@ -176,10 +164,6 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
             data = filterData;
             break;
           }
-          case "-": {
-            Swal.fire("Error", "Por favor, seleccione un filtro de actuador", "info");
-            break;
-          }
           default:
             break;
         }
@@ -188,10 +172,8 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
       }
       break;
     }
-    case "-": {
-      Swal.fire("Error", "Por favor, seleccione un filtro", "info");
+    default:
       break;
-    }
   }
   return data;
 }

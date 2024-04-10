@@ -1,3 +1,3 @@
-export * from "./Form";
-export * from "./Table";
-export * from "./Graphic";
+export * from "./form";
+export * from "./table";
+export * from "./graphic";

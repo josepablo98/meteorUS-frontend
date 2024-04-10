@@ -1,6 +1,6 @@
-import { isActuatorFormatted, isPressureFormatted, isTemperatureFormatted } from "../helpers";
-import { TableProps } from "../interfaces"
-import "../table.css";
+import { isActuatorFormatted, isPressureFormatted, isTemperatureFormatted } from "../../helpers";
+import { TableProps } from "../../interfaces";
+import { TableRow } from "./TableRow";
 
 
 export const Table = ({ data }: TableProps) => {
@@ -36,12 +36,8 @@ export const Table = ({ data }: TableProps) => {
         </tr>
       </thead>
       <tbody>
-        {data.map((item) => (
-          <tr key={item.id}>
-            {columns.map((column) => (
-              <td key={column.key}>{String(item[column.key as keyof typeof item])}</td>
-            ))}
-          </tr>
+        {data.map((item, index) => (
+          <TableRow key={index} data={item} />
         ))}
       </tbody>
     </table>

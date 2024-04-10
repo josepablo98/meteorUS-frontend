@@ -53,10 +53,6 @@ export const getBoard = async ({ boardId, data, endDate, filter, startDate }: Ge
       }
       break;
     }
-    case "-": {
-      Swal.fire("Error", "Por favor, seleccione un filtro", "info");
-      break;
-    }
     default:
       break;
   }
