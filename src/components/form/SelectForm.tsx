@@ -31,7 +31,7 @@ export const SelectForm = ({ errors, getFieldProps, setFieldValue, touched, regi
         (register !== "-" && register !== "Registros de placas") && (
           <div className="col-md-4">
             <label>Filtros:</label>
-            <select className="form-control" name={fieldPropsFilter.name} onChange={fieldPropsFilter.onChange} value={String(fieldPropsFilter.value)} style={{ borderColor: (errors.register && touched.register) ? "red" : "", borderWidth: (errors.register && touched.register) ? "2px" : "" }} onBlur={fieldPropsFilter.onBlur}>
+            <select className="form-control" name={fieldPropsFilter.name} onChange={fieldPropsFilter.onChange} value={String(fieldPropsFilter.value)} style={{ borderColor: (errors.filter && touched.register) ? "red" : "", borderWidth: (errors.register && touched.register) ? "2px" : "" }} onBlur={fieldPropsFilter.onBlur}>
               <option>-</option>
               <option>Mostrar todo</option>
               <option>Mostrar por boardId</option>
@@ -46,7 +46,7 @@ export const SelectForm = ({ errors, getFieldProps, setFieldValue, touched, regi
         register === "Registros de placas" && (
           <div className="col-md-4">
             <label>Filtros:</label>
-            <select className="form-control" name={fieldPropsFilter.name} onChange={fieldPropsFilter.onChange} value={String(fieldPropsFilter.value)} style={{ borderColor: (errors.register && touched.filter) ? "red" : "", borderWidth: (errors.register && touched.register) ? "2px" : ""}} onBlur={fieldPropsFilter.onBlur}>
+            <select className="form-control" name={fieldPropsFilter.name} onChange={fieldPropsFilter.onChange} value={String(fieldPropsFilter.value)} style={{ borderColor: (errors.filter && touched.filter) ? "red" : "", borderWidth: (errors.register && touched.register) ? "2px" : ""}} onBlur={fieldPropsFilter.onBlur}>
               <option>-</option>
               <option>Mostrar todo</option>
               <option>Mostrar por boardId</option>
@@ -60,7 +60,7 @@ export const SelectForm = ({ errors, getFieldProps, setFieldValue, touched, regi
         register === "Registros de actuadores" && (
           <div className="col-md-4">
             <label>Filtros de actuadores:</label>
-            <select className="form-control" name={fieldPropsActuatorFilter.name} onChange={fieldPropsActuatorFilter.onChange} value={String(fieldPropsActuatorFilter.value)} style={{ borderColor: (errors.register && touched.register) ? "red" : "", borderWidth: (errors.register && touched.register) ? "2px" : "" }} onBlur={fieldPropsActuatorFilter.onBlur}>
+            <select className="form-control" name={fieldPropsActuatorFilter.name} onChange={fieldPropsActuatorFilter.onChange} value={String(fieldPropsActuatorFilter.value)} style={{ borderColor: (errors.actuatorFilter && touched.actuatorFilter) ? "red" : "", borderWidth: (errors.register && touched.register) ? "2px" : "" }} onBlur={fieldPropsActuatorFilter.onBlur}>
               <option>-</option>
               <option>Mostrar todo</option>
               <option>Mostrar por calor</option>

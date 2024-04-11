@@ -1,49 +1,95 @@
-import React, { useEffect, useRef } from 'react';
-import { Chart, LineController, LineElement, PointElement, LinearScale, CategoryScale, Title, Tooltip, Legend } from 'chart.js';
-import { formatDataForChart } from '../../helpers';
-import { GraphicProps } from '../../interfaces';
-
-// Registra los elementos necesarios
-Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Title, Tooltip, Legend);
+import { GraphicProps } from "../../interfaces";
+import HighchartsReact from "highcharts-react-official";
+import Highcharts from "highcharts";
 
 export const Graphic: React.FC<GraphicProps> = ({ data }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let series : any = [];
+  let yAxisTitle = 'Valor';
 
-  useEffect(() => {
-    if (canvasRef.current) {
-      const formattedData = formatDataForChart(data);
-      const chart = new Chart(canvasRef.current, {
-        type: 'line',
-        data: formattedData,
-        options: {
-          responsive: true,
-          animations: {
-            radius: {
-              duration: 400,
-              easing: 'linear',
-              loop: (context) => context.active
-            },
-          },
-          interaction: {
-            intersect: false,
-          },
-          plugins: {
-            legend: {
-              display: false,
-            },
-            title: {
-              display: true,
-              text: 'Gráfico',
-            }
-          },
+  if (data.length > 0) {
+    const firstItem = data[0];
+    if ('temperature' in firstItem && 'humidity' in firstItem) {
+      series = [
+        {
+          name: 'Temperatura',
+          type: 'line',
+          data: data.map(item => "temperature" in item && item.temperature)
         },
-      });
-
-      return () => {
-        chart.destroy();
-      };
+        {
+          name: 'Humedad',
+          type: 'line',
+          data: data.map(item => "humidity" in item && item.humidity)
+        }
+      ];
+      yAxisTitle = 'Temperatura / Humedad';
+    } else if ('pressure' in firstItem && 'altitude' in firstItem) {
+      series = [
+        {
+          name: 'Presión',
+          type: 'line',
+          data: data.map(item => "pressure" in item && item.pressure)
+        },
+        {
+          name: 'Altitud',
+          type: 'line',
+          data: data.map(item => "altitude" in item && item.altitude)
+        }
+      ];
+      yAxisTitle = 'Presión / Altitud';
+    } else if ('isOn' in firstItem && 'isHot' in firstItem && 'isCold' in firstItem) {
+      series = [
+        {
+          name: 'isOn',
+          type: 'line',
+          step: 'left',
+          data: data.map(item => "isOn" in item && item.isOn ? 1 : 0)
+        },
+        {
+          name: 'isHot',
+          type: 'line',
+          step: 'left',
+          data: data.map(item => "isHot" in item && item.isHot ? 1 : 0)
+        },
+        {
+          name: 'isCold',
+          type: 'line',
+          step: 'left',
+          data: data.map(item => "isCold" in item && item.isCold ? 1 : 0)
+        }
+      ];
+      yAxisTitle = 'Estado';
     }
-  }, [data]);
+  }
 
-  return <canvas ref={canvasRef} />;
+  const options = {
+    chart: {
+      animation: {
+        duration: 1000,
+        easing: 'linear'
+      }
+    },
+    title: {
+      text: 'Gráfico'
+    },
+    xAxis: {
+      categories: data.map((item) => item.formattedDate),
+      title: {
+        text: 'Fecha'
+      }
+    },
+    yAxis: {
+      title: {
+        text: yAxisTitle
+      }
+    },
+    series: series
+  };
+
+  return (
+    <HighchartsReact
+      highcharts={Highcharts}
+      options={options}
+    />
+  );
 };

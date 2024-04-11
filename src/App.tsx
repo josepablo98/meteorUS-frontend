@@ -1,6 +1,6 @@
 import "./styles";
 import { useCallback, useEffect, useState } from "react";
-import { ActuatorFormatted, BoardFormatted, DataProps, FormProps, PressureFormatted, TemperatureFormatted } from "./interfaces";
+import { ActuatorFilter, ActuatorFormatted, BoardFormatted, DataProps, Filter, FormProps, PressureFormatted, Register, TemperatureFormatted } from "./interfaces";
 import { getBoard, getTempHum, getActuator, getPressure } from "./helpers";
 import { Form } from "./components/form/Form";
 import { Table } from "./components";
@@ -28,15 +28,17 @@ export const App = () => {
   const [data, setData] = useState<DataProps>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isGraphic, setIsGraphic] = useState(false);
-  const [isDate, setIsDate] = useState(false);
-  const [isBoardId, setIsBoardId] = useState(false);
+  const [isDateAvailable, setIsDateAvailable] = useState(false);
+  const [isBoardIdAvailable, setIsBoardIdAvailable] = useState(false);
   const [isFilterAvailable, setIsFilterAvailable] = useState(false);
   const [isActuatorFilterAvailable, setIsActuatorFilterAvailable] = useState(false);
-
+  const [finalFilterValue, setFinalFilterValue] = useState<Filter>("-");
+  const [finalRegisterValue, setFinalRegisterValue] = useState<Register>("-");
+  const [finalActuatorFilterValue, setFinalActuatorFilterValue] = useState<ActuatorFilter>("-");
 
   const { values, handleSubmit, handleReset, errors, touched, getFieldProps, setFieldValue } = useFormik({
     initialValues: initialForm,
-    validationSchema: formSchema({ isBoardId, isDate, isFilterAvailable, isActuatorFilterAvailable}),
+    validationSchema: formSchema({ isBoardIdAvailable, isDateAvailable, isFilterAvailable, isActuatorFilterAvailable }),
     onSubmit: (values: FormProps) => {
       handleSubmitFunction(values);
     },
@@ -50,41 +52,41 @@ export const App = () => {
   useEffect(() => {
     setIsActuatorFilterAvailable(values.register === "Registros de actuadores")
   }, [values.register])
-  
+
 
   useEffect(() => {
 
     if (values.register === "-") {
-      setIsDate(true);
-      setIsBoardId(true);
+      setIsDateAvailable(true);
+      setIsBoardIdAvailable(true);
       return;
     }
 
     switch (values.filter) {
       case "Mostrar todo":
-        setIsDate(true);
-        setIsBoardId(true);
+        setIsDateAvailable(true);
+        setIsBoardIdAvailable(true);
         break;
       case "Mostrar por boardId":
-        setIsDate(true);
-        setIsBoardId(false);
+        setIsDateAvailable(true);
+        setIsBoardIdAvailable(false);
         break;
       case "Mostrar por fecha":
-        setIsDate(false);
-        setIsBoardId(true);
+        setIsDateAvailable(false);
+        setIsBoardIdAvailable(true);
         break;
       case "Mostrar por boardId y fecha":
         if (values.register !== "Registros de placas") {
-          setIsDate(false);
-          setIsBoardId(false);
+          setIsDateAvailable(false);
+          setIsBoardIdAvailable(false);
         } else {
-          setIsBoardId(true);
-          setIsDate(true);
+          setIsBoardIdAvailable(true);
+          setIsDateAvailable(true);
         }
         break;
       case "-":
-        setIsDate(true);
-        setIsBoardId(true);
+        setIsDateAvailable(true);
+        setIsBoardIdAvailable(true);
         break;
     }
   }, [values.register, values.filter])
@@ -92,8 +94,12 @@ export const App = () => {
     setData([]);
   }
 
-  const onToggleGraphic = () => {
-    setIsGraphic(!isGraphic);
+  const onToggleGraphic = (value?: boolean) => {
+    if (value && isGraphic !== value) { 
+      setIsGraphic(value);
+    } else {
+      setIsGraphic(!isGraphic);
+    }
   }
 
   const handleSubmitFunction = (values: FormProps) => {
@@ -135,12 +141,32 @@ export const App = () => {
       default:
         break;
     }
+    setFinalFilterValue(values.filter);
+
+    setFinalRegisterValue(values.register);
+
+    setFinalActuatorFilterValue(values.actuatorFilter);
+    
 
     setIsLoading(false);
 
   }
 
-  const handleMessage = useCallback((topic: string, message: Buffer) : void  => {
+  useEffect(() => {
+    if (finalRegisterValue === "Registros de placas" && isGraphic) {
+      setIsGraphic(false);
+    }
+  }, [finalRegisterValue, isGraphic])
+
+  useEffect(() => {
+    if ((finalActuatorFilterValue === "Mostrar por calor" || finalActuatorFilterValue === "Mostrar por frio") && isGraphic) {
+      setIsGraphic(false);
+    }
+  }, [finalActuatorFilterValue, isGraphic])
+  
+  
+
+  const handleMessage = useCallback((topic: string, message: Buffer): void => {
     let newData = JSON.parse(message.toString());
     newData = { ...newData, formattedDate: new Date(newData.timest).toLocaleDateString("es-ES") };
 
@@ -152,34 +178,37 @@ export const App = () => {
 
     // Si newData no existe, añádelo al estado
     if (data.length > 0) {
-      switch (topic) {
-        case "boards": {
-          if (!("sensorId" in data[0])) {
-            setData(prev => [...prev, newData]);
+      if (finalFilterValue === "Mostrar todo") {
+        switch (topic) {
+          case "boards": {
+            if (!("sensorId" in data[0])) {
+              setData(prev => [...prev, newData]);
+            }
+            break;
           }
-          break;
-        }
-        case "temphums": {
-          if ("temperature" in data[0]) {
-            setData(prev => [...prev, newData]);
+          case "temphums": {
+            if ("temperature" in data[0]) {
+              setData(prev => [...prev, newData]);
+            }
+            break;
           }
-          break;
-        }
-        case "pressures": {
-          if ("pressure" in data[0]) {
-            setData(prev => [...prev, newData]);
+          case "pressures": {
+            if ("pressure" in data[0]) {
+              setData(prev => [...prev, newData]);
+            }
+            break;
           }
-          break;
-        }
-        case "actuators": {
-          if ('isOn' in data[0]) {
-            setData(prev => [...prev, newData]);
+          case "actuators": {
+            if ('isOn' in data[0]) {
+              setData(prev => [...prev, newData]);
+            }
+            break;
           }
-          break;
         }
       }
     }
-  }, [data]);
+
+  }, [data, finalFilterValue]);
 
   useEffect(() => {
     client.on("connect", () => {
@@ -188,11 +217,11 @@ export const App = () => {
       client.subscribe("pressures");
       client.subscribe("actuators");
     });
-  
-    
-  
+
+
+
     client.on("message", handleMessage);
-  
+
     // Limpiar el evento al desmontar el componente
     return () => {
       client.off("message", handleMessage);
@@ -203,6 +232,7 @@ export const App = () => {
     <div className="app container">
       <img src="./meteorUS_Logo.png" />
       <h3 className="text-center mt-2">Una aplicacion para consultar valores meteorológicos</h3>
+
       <Form
         values={values}
         isLoading={isLoading}
@@ -215,8 +245,9 @@ export const App = () => {
         data={data}
         onTableReset={onTableReset}
         onToggleGraphic={onToggleGraphic}
-        isBoardId={isBoardId}
-        isDate={isDate}
+        isBoardId={isBoardIdAvailable}
+        isDate={isDateAvailable}
+        finalActuatorFilterValue={finalActuatorFilterValue}
       />
       {
         (data.length > 0 && !isGraphic) && (
