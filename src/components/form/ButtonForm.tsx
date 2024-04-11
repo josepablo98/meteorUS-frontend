@@ -1,6 +1,6 @@
 import { ButtonProps } from "../../interfaces"
 
-export const ButtonForm = ({ data, isLoading, onResetForm, onSubmit, onTableReset, onToggleGraphic, finalActuatorFilterValue } : ButtonProps) => {
+export const ButtonForm = ({ data, isLoading, onResetForm, onSubmit, onTableReset, onToggleGraphic } : ButtonProps) => {
   return (
     <div className="row my-btn">
       <div className="col-md-2">
@@ -13,7 +13,7 @@ export const ButtonForm = ({ data, isLoading, onResetForm, onSubmit, onTableRese
         <button type="button" className="table-btn btn btn-secondary" onClick={onTableReset}>Limpiar tabla</button>
       </div>
       {
-        (data.length > 0 && "sensorId" in data[0] && !(finalActuatorFilterValue === "Mostrar por calor" || finalActuatorFilterValue === "Mostrar por frio")) &&
+        (data.length > 0 && "sensorId" in data[0]) &&
         <div className="col-md-2">
           <button type="button" className="graphic-btn btn btn-secondary" onClick={onToggleGraphic}>Alternar entre tabla y gráfica</button>
         </div>

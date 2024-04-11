@@ -2,7 +2,7 @@ import { GraphicProps } from "../../interfaces";
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts";
 
-export const Graphic: React.FC<GraphicProps> = ({ data }) => {
+export const Graphic: React.FC<GraphicProps> = ({ data, filterActuatorData }) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let series : any = [];
   let yAxisTitle = 'Valor';
@@ -38,26 +38,53 @@ export const Graphic: React.FC<GraphicProps> = ({ data }) => {
       ];
       yAxisTitle = 'Presión / Altitud';
     } else if ('isOn' in firstItem && 'isHot' in firstItem && 'isCold' in firstItem) {
-      series = [
-        {
-          name: 'isOn',
-          type: 'line',
-          step: 'left',
-          data: data.map(item => "isOn" in item && item.isOn ? 1 : 0)
-        },
-        {
-          name: 'isHot',
-          type: 'line',
-          step: 'left',
-          data: data.map(item => "isHot" in item && item.isHot ? 1 : 0)
-        },
-        {
-          name: 'isCold',
-          type: 'line',
-          step: 'left',
-          data: data.map(item => "isCold" in item && item.isCold ? 1 : 0)
+      switch (filterActuatorData) {
+        case "Mostrar todo": {
+          series = [
+            {
+              name: "Encendido",
+              type: "line",
+              step: "left",
+              data: data.map(item => "isOn" in item && item.isOn ? 1 : 0)
+            },
+            {
+              name: "Caliente",
+              type: "line",
+              step: "left",
+              data: data.map(item => "isHot" in item && item.isHot ? 1 : 0)
+            },
+            {
+              name: "Frío",
+              type: "line",
+              step: "left",
+              data: data.map(item => "isCold" in item && item.isCold ? 1 : 0)
+            }
+          ]
+          break;
         }
-      ];
+        case "Mostrar por calor": {
+          series = [
+            {
+              name: "Caliente",
+              type: "line",
+              step: "left",
+              data: data.map(item => "isHot" in item && item.isHot ? 1 : 0)
+            }
+          ]
+          break;
+        }
+        case "Mostrar por frio": {
+          series = [
+            {
+              name: "Frío",
+              type: "line",
+              step: "left",
+              data: data.map(item => "isCold" in item && item.isCold ? 1 : 0)
+            }
+          ]
+          break;
+      }
+      }
       yAxisTitle = 'Estado';
     }
   }

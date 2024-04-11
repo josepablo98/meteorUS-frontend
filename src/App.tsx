@@ -94,12 +94,8 @@ export const App = () => {
     setData([]);
   }
 
-  const onToggleGraphic = (value?: boolean) => {
-    if (value && isGraphic !== value) { 
-      setIsGraphic(value);
-    } else {
-      setIsGraphic(!isGraphic);
-    }
+  const onToggleGraphic = () => {
+    setIsGraphic(!isGraphic);
   }
 
   const handleSubmitFunction = (values: FormProps) => {
@@ -157,13 +153,6 @@ export const App = () => {
       setIsGraphic(false);
     }
   }, [finalRegisterValue, isGraphic])
-
-  useEffect(() => {
-    if ((finalActuatorFilterValue === "Mostrar por calor" || finalActuatorFilterValue === "Mostrar por frio") && isGraphic) {
-      setIsGraphic(false);
-    }
-  }, [finalActuatorFilterValue, isGraphic])
-  
   
 
   const handleMessage = useCallback((topic: string, message: Buffer): void => {
@@ -178,7 +167,7 @@ export const App = () => {
 
     // Si newData no existe, añádelo al estado
     if (data.length > 0) {
-      if (finalFilterValue === "Mostrar todo") {
+      if (finalFilterValue === "Mostrar todo" && finalActuatorFilterValue !== "Mostrar por calor" && finalActuatorFilterValue !== "Mostrar por frio") {
         switch (topic) {
           case "boards": {
             if (!("sensorId" in data[0])) {
@@ -208,7 +197,7 @@ export const App = () => {
       }
     }
 
-  }, [data, finalFilterValue]);
+  }, [data, finalActuatorFilterValue, finalFilterValue]);
 
   useEffect(() => {
     client.on("connect", () => {
@@ -247,7 +236,6 @@ export const App = () => {
         onToggleGraphic={onToggleGraphic}
         isBoardId={isBoardIdAvailable}
         isDate={isDateAvailable}
-        finalActuatorFilterValue={finalActuatorFilterValue}
       />
       {
         (data.length > 0 && !isGraphic) && (
@@ -256,7 +244,7 @@ export const App = () => {
       }
       {
         (data.length > 0 && isGraphic) && (
-          <Graphic data={data} />
+          <Graphic data={data} filterActuatorData={finalActuatorFilterValue}/>
         )
       }
     </div>
