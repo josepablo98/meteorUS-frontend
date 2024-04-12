@@ -22,6 +22,7 @@ export interface FormComponentProps {
   data: DataProps;
   isBoardId: boolean;
   isDate: boolean;
+  finalActuatorFilterValue: ActuatorFilter;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setFieldValue: (field: string, value: any, shouldValidate?: boolean | undefined) => Promise<void> | Promise<FormikErrors<FormProps>>;
   getFieldProps: (nameOrOptions: string | FieldConfig<FormProps>) => FieldInputProps<FormProps>;
@@ -53,6 +54,7 @@ export interface SelectFormProps {
 export interface ButtonProps {
   data: DataProps;
   isLoading: boolean;
+  finalActuatorFilterValue: ActuatorFilter;
   onSubmit: (e?: React.FormEvent<HTMLFormElement> | undefined) => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onResetForm: (e: any) => void;

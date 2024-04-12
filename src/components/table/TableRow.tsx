@@ -7,6 +7,7 @@ export const TableRow = ({ data }: { data: any }) => {
     { title: 'ID', key: 'id' },
     { title: 'Board ID', key: 'boardId' },
     { title: 'Date', key: 'formattedDate' },
+    { title: 'Group ID', key: 'groupId' },
     ...isTemperatureFormatted(data) ? [
       { title: 'Temperature', key: 'temperature' },
       { title: 'Humidity', key: 'humidity' },

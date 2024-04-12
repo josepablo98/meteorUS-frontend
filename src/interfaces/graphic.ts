@@ -1,7 +1,6 @@
-import { ActuatorFilter, DataProps } from "./types";
+import { DataProps } from "./types";
 
 
 export interface GraphicProps {
   data: DataProps;
-  filterActuatorData: ActuatorFilter;
 }

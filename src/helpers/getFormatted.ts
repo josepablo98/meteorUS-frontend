@@ -1,5 +1,8 @@
 import { DataSimpleProps } from "../interfaces";
 
+export const isBoardFormatted = (data: DataSimpleProps) => {
+  return !("sensorId" in data);
+}
 
 export const isTemperatureFormatted = (data: DataSimpleProps) => {
   return 'temperature' in data;

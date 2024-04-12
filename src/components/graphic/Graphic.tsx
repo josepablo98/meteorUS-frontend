@@ -1,94 +1,67 @@
-import { GraphicProps } from "../../interfaces";
+import { Actuator, GraphicProps, Pressure, Temperature } from "../../interfaces";
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts";
+import { isActuatorFormatted, isPressureFormatted, isTemperatureFormatted } from "../../helpers";
 
-export const Graphic: React.FC<GraphicProps> = ({ data, filterActuatorData }) => {
+export const Graphic: React.FC<GraphicProps> = ({ data }) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let series : any = [];
+  let series: any = [];
   let yAxisTitle = 'Valor';
 
   if (data.length > 0) {
     const firstItem = data[0];
-    if ('temperature' in firstItem && 'humidity' in firstItem) {
+    if (isTemperatureFormatted(firstItem)) {
       series = [
         {
           name: 'Temperatura',
           type: 'line',
-          data: data.map(item => "temperature" in item && item.temperature)
+          data: (data as Temperature[]).map(item => item.temperature)
         },
         {
           name: 'Humedad',
           type: 'line',
-          data: data.map(item => "humidity" in item && item.humidity)
+          data: (data as Temperature[]).map(item => item.humidity)
         }
       ];
       yAxisTitle = 'Temperatura / Humedad';
-    } else if ('pressure' in firstItem && 'altitude' in firstItem) {
+    } else if (isPressureFormatted(firstItem)) {
       series = [
         {
           name: 'Presión',
           type: 'line',
-          data: data.map(item => "pressure" in item && item.pressure)
+          data: (data as Pressure[]).map(item => item.pressure)
         },
         {
           name: 'Altitud',
           type: 'line',
-          data: data.map(item => "altitude" in item && item.altitude)
+          data: (data as Pressure[]).map(item => item.altitude)
         }
       ];
       yAxisTitle = 'Presión / Altitud';
-    } else if ('isOn' in firstItem && 'isHot' in firstItem && 'isCold' in firstItem) {
-      switch (filterActuatorData) {
-        case "Mostrar todo": {
-          series = [
-            {
-              name: "Encendido",
-              type: "line",
-              step: "left",
-              data: data.map(item => "isOn" in item && item.isOn ? 1 : 0)
-            },
-            {
-              name: "Caliente",
-              type: "line",
-              step: "left",
-              data: data.map(item => "isHot" in item && item.isHot ? 1 : 0)
-            },
-            {
-              name: "Frío",
-              type: "line",
-              step: "left",
-              data: data.map(item => "isCold" in item && item.isCold ? 1 : 0)
-            }
-          ]
-          break;
+    } else if (isActuatorFormatted(firstItem)) {
+      series = [
+        {
+          name: "Encendido",
+          type: "line",
+          step: "left",
+          data: (data as Actuator[]).map(item => item.isOn ? 1 : 0)
+        },
+        {
+          name: "Caliente",
+          type: "line",
+          step: "left",
+          data: (data as Actuator[]).map(item => item.isHot ? 1 : 0)
+        },
+        {
+          name: "Frío",
+          type: "line",
+          step: "left",
+          data: (data as Actuator[]).map(item => item.isCold ? 1 : 0)
         }
-        case "Mostrar por calor": {
-          series = [
-            {
-              name: "Caliente",
-              type: "line",
-              step: "left",
-              data: data.map(item => "isHot" in item && item.isHot ? 1 : 0)
-            }
-          ]
-          break;
-        }
-        case "Mostrar por frio": {
-          series = [
-            {
-              name: "Frío",
-              type: "line",
-              step: "left",
-              data: data.map(item => "isCold" in item && item.isCold ? 1 : 0)
-            }
-          ]
-          break;
-      }
-      }
-      yAxisTitle = 'Estado';
+      ]
     }
+    yAxisTitle = 'Estado';
   }
-
   const options = {
     chart: {
       animation: {
@@ -112,11 +85,13 @@ export const Graphic: React.FC<GraphicProps> = ({ data, filterActuatorData }) =>
     },
     series: series
   };
-
+  
   return (
     <HighchartsReact
       highcharts={Highcharts}
       options={options}
     />
   );
-};
+
+}
+

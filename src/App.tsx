@@ -8,6 +8,7 @@ import { formSchema } from "./schemas";
 import { Graphic } from "./components";
 import { useFormik } from "formik";
 import mqtt from "mqtt";
+import { getSameJson } from "./helpers/getSameJson";
 
 const MQTT_SERVER = "broker.hivemq.com";
 const MQTT_PORT = 8884;
@@ -46,13 +47,24 @@ export const App = () => {
   })
 
   useEffect(() => {
-    setIsFilterAvailable(values.register !== "-")
-  }, [values.register])
+    if (values.register !== "Registros de actuadores" && values.actuatorFilter !== "-") {
+      setFieldValue("actuatorFilter", "-");
+    }
+  }, [values.register, values.actuatorFilter, setFieldValue])
+
 
   useEffect(() => {
+    if (values.register === "-" && values.filter !== "-") {
+      setFieldValue("filter", "-");
+    }
+  }, [setFieldValue, values.filter, values.register])
+  
+
+  useEffect(() => {
+    setIsFilterAvailable(values.register !== "-")
     setIsActuatorFilterAvailable(values.register === "Registros de actuadores")
   }, [values.register])
-
+  
 
   useEffect(() => {
 
@@ -153,6 +165,13 @@ export const App = () => {
       setIsGraphic(false);
     }
   }, [finalRegisterValue, isGraphic])
+
+  useEffect(() => {
+    if ((finalActuatorFilterValue === "Mostrar por calor" || finalActuatorFilterValue === "Mostrar por frio") && isGraphic) {
+      setIsGraphic(false);
+    }
+  }, [finalActuatorFilterValue, isGraphic])
+  
   
 
   const handleMessage = useCallback((topic: string, message: Buffer): void => {
@@ -165,32 +184,28 @@ export const App = () => {
     // Si newData ya existe, no hagas nada
     if (dataExists) return;
 
+    delete newData.ok;
+
+    const sameJson = getSameJson(data[0], newData);
+
     // Si newData no existe, añádelo al estado
     if (data.length > 0) {
       if (finalFilterValue === "Mostrar todo" && finalActuatorFilterValue !== "Mostrar por calor" && finalActuatorFilterValue !== "Mostrar por frio") {
         switch (topic) {
           case "boards": {
-            if (!("sensorId" in data[0])) {
-              setData(prev => [...prev, newData]);
-            }
+            sameJson && setData(prev => [...prev, newData]);
             break;
           }
           case "temphums": {
-            if ("temperature" in data[0]) {
-              setData(prev => [...prev, newData]);
-            }
+            sameJson && setData(prev => [...prev, newData]);
             break;
           }
           case "pressures": {
-            if ("pressure" in data[0]) {
-              setData(prev => [...prev, newData]);
-            }
+            sameJson && setData(prev => [...prev, newData]);
             break;
           }
           case "actuators": {
-            if ('isOn' in data[0]) {
-              setData(prev => [...prev, newData]);
-            }
+            sameJson && setData(prev => [...prev, newData]);
             break;
           }
         }
@@ -236,6 +251,7 @@ export const App = () => {
         onToggleGraphic={onToggleGraphic}
         isBoardId={isBoardIdAvailable}
         isDate={isDateAvailable}
+        finalActuatorFilterValue={finalActuatorFilterValue}
       />
       {
         (data.length > 0 && !isGraphic) && (
@@ -244,7 +260,7 @@ export const App = () => {
       }
       {
         (data.length > 0 && isGraphic) && (
-          <Graphic data={data} filterActuatorData={finalActuatorFilterValue}/>
+          <Graphic data={data} />
         )
       }
     </div>

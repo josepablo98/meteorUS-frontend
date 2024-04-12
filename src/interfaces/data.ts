@@ -13,12 +13,14 @@ export interface GetDataProps {
 export interface Board {
   id: number;
   boardId: number;
+  groupId: number;
   timest: number;
 }
 
 export interface BoardFormatted {
   id: number;
   boardId: number;
+  groupId: number;
   timest: number;
   formattedDate: string;
 }
@@ -26,6 +28,7 @@ export interface BoardFormatted {
 export interface Temperature {
   id: number;
   temperature: number;
+  groupId: number;
   humidity: number;
   timest: number;
   boardId: number;
@@ -35,6 +38,7 @@ export interface Temperature {
 export interface TemperatureFormatted {
   id: number;
   temperature: number;
+  groupId: number;
   humidity: number;
   timest: number;
   boardId: number;
@@ -45,6 +49,7 @@ export interface TemperatureFormatted {
 export interface Pressure {
   id: number;
   pressure: number;
+  groupId: number;
   altitude: number;
   timest: number;
   boardId: number;
@@ -54,6 +59,7 @@ export interface Pressure {
 export interface PressureFormatted {
   id: number;
   pressure: number;
+  groupId: number;
   altitude: number;
   timest: number;
   boardId: number;
@@ -63,6 +69,7 @@ export interface PressureFormatted {
 
 export interface Actuator {
   id: number;
+  groupId: number;
   isOn: boolean;
   isHot: boolean;
   isCold: boolean;
@@ -73,6 +80,7 @@ export interface Actuator {
 
 export interface ActuatorFormatted {
   id: number;
+  groupId: number;
   isOn: boolean;
   isHot: boolean;
   isCold: boolean;
