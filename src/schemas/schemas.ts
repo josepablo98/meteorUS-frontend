@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import { SchemaProps } from '../interfaces';
 
-export const formSchema = ({isBoardIdAvailable, isDateAvailable, isFilterAvailable, isActuatorFilterAvailable} : SchemaProps) => Yup.object().shape({
+export const formSchema = ({ isBoardIdAvailable, isDateAvailable, isFilterAvailable, isActuatorFilterAvailable }: SchemaProps) => Yup.object().shape({
   boardId: isBoardIdAvailable
     ? Yup.number().nullable()
     : Yup.number().required('El boardId es requerido').positive('El boardId debe ser un número positivo').integer('El boardId debe ser un número entero'),
@@ -20,4 +20,11 @@ export const formSchema = ({isBoardIdAvailable, isDateAvailable, isFilterAvailab
   actuatorFilter: isActuatorFilterAvailable
     ? Yup.string().required('El filtro de actuadores es requerido').oneOf(['Mostrar todo', 'Mostrar por calor', 'Mostrar por frio'], 'El filtro de actuadores es inválido')
     : Yup.string().nullable()
+});
+
+export const formTableSchema = Yup.object().shape({
+  numberPage: Yup.number()
+    .required('El número de página es requerido')
+    .moreThan(-1, 'El número de página debe ser mayor o igual a 0')
+    .integer('El número de página debe ser un número entero')
 });

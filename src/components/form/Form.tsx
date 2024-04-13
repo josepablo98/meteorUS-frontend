@@ -11,7 +11,7 @@ export const Form = ({ data, errors, getFieldProps, setFieldValue, isLoading, on
 
       <SelectForm getFieldProps={getFieldProps} setFieldValue={setFieldValue} errors={errors} touched={touched} register={values.register} filter={values.filter}/>
 
-      <ButtonForm isLoading={isLoading} data={data} onResetForm={onResetForm} onSubmit={onSubmit} onToggleGraphic={onToggleGraphic} onTableReset={onTableReset} finalActuatorFilterValue={finalActuatorFilterValue}/>
+      <ButtonForm isLoading={isLoading} data={data} onResetForm={onResetForm} onSubmit={onSubmit} onToggleGraphic={onToggleGraphic} onTableReset={onTableReset} finalActuatorFilterValue={finalActuatorFilterValue} />
 
     </form>
   )

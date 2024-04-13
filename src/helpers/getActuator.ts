@@ -2,11 +2,11 @@ import Swal from 'sweetalert2';
 import { Actuator, GetDataProps } from '../interfaces';
 import { fetchApiAll, fetchApiByBoardId } from '../api';
 
-export const getActuator = async ({ boardId, data, endDate, filter, startDate, actuatorFilter }: GetDataProps) => {
+export const getActuator = async ({ boardId, data, endDate, filter, startDate, actuatorFilter, numberPage, setPage }: GetDataProps) => {
   switch (filter) {
     case "Mostrar todo": {
       try {
-        const res = await fetchApiAll<Actuator[]>("actuator");
+        const res = await fetchApiAll<Actuator[]>("actuator", setPage, numberPage);
         const dataFormatted = res.map((actuator) => {
           const formattedDate = new Date(actuator.timest).toLocaleDateString("es-ES");
           return { ...actuator, formattedDate };
@@ -44,7 +44,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
     }
     case "Mostrar por boardId": {
       try {
-        const res = await fetchApiByBoardId<Actuator[]>("actuator", boardId);
+        const res = await fetchApiByBoardId<Actuator[]>("actuator", boardId, setPage, numberPage);
         const dataFormatted = res.map((actuator) => {
           const formattedDate = new Date(actuator.timest).toLocaleDateString("es-ES");
           return { ...actuator, formattedDate };
@@ -82,7 +82,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
     }
     case "Mostrar por fecha": {
       try {
-        const res = await fetchApiAll<Actuator[]>("actuator");
+        const res = await fetchApiAll<Actuator[]>("actuator", setPage,numberPage);
         const filterData = res.filter((actuator) => {
           const formattedDate = new Date(actuator.timest).toISOString().split("T")[0];
           return formattedDate >= String(startDate) && formattedDate <= String(endDate);
@@ -128,7 +128,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
     }
     case "Mostrar por boardId y fecha": {
       try {
-        const res = await fetchApiByBoardId<Actuator[]>("actuator", boardId);
+        const res = await fetchApiByBoardId<Actuator[]>("actuator", boardId, setPage, numberPage);
         const filterData = res.filter((actuator) => {
           const formattedDate = new Date(actuator.timest).toISOString().split("T")[0];
           return formattedDate >= String(startDate) && formattedDate <= String(endDate);

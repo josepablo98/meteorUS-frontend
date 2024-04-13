@@ -3,13 +3,13 @@ import { Board, GetDataProps } from "../interfaces";
 import Swal from "sweetalert2"
 
 
-export const getBoard = async ({ boardId, data, endDate, filter, startDate }: GetDataProps) => {
+export const getBoard = async ({ boardId, data, endDate, filter, startDate, numberPage, setPage }: GetDataProps) => {
 
   switch (filter) {
 
     case "Mostrar todo": {
       try {
-        const res = await fetchApiAll<Board[]>("board");
+        const res = await fetchApiAll<Board[]>("board", setPage, numberPage);
         const dataFormatted = res.map((board) => {
           const formattedDate = new Date(board.timest).toLocaleDateString("es-ES");
           return { ...board, formattedDate };
@@ -32,7 +32,7 @@ export const getBoard = async ({ boardId, data, endDate, filter, startDate }: Ge
     }
     case "Mostrar por fecha": {
       try {
-        const res = await fetchApiAll<Board[]>("board");
+        const res = await fetchApiAll<Board[]>("board", setPage, numberPage);
         const filterData = res.filter((board) => {
           const formattedDate = new Date(board.timest).toISOString().split("T")[0];  
           return formattedDate >= String(startDate) && formattedDate <= String(endDate);

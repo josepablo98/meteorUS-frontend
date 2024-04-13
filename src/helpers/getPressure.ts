@@ -4,11 +4,11 @@ import { fetchApiAll, fetchApiByBoardId } from "../api";
 
 
 
-export const getPressure = async ({ boardId, data, endDate, filter, startDate } : GetDataProps) => {
+export const getPressure = async ({ boardId, data, endDate, filter, startDate, numberPage, setPage } : GetDataProps) => {
   switch(filter) {
     case "Mostrar todo": {
       try {
-        const res = await fetchApiAll<Pressure[]>("pressure");
+        const res = await fetchApiAll<Pressure[]>("pressure", setPage, numberPage);
         const dataFormatted = res.map((pressure) => {
           const formattedDate = new Date(pressure.timest).toLocaleDateString("es-ES");
           return { ...pressure, formattedDate };
@@ -21,7 +21,7 @@ export const getPressure = async ({ boardId, data, endDate, filter, startDate } 
     }
     case "Mostrar por boardId": {
       try {
-        const res = await fetchApiByBoardId<Pressure[]>("pressure", boardId);
+        const res = await fetchApiByBoardId<Pressure[]>("pressure", boardId, setPage, numberPage);
         const dataFormatted = res.map((pressure) => {
           const formattedDate = new Date(pressure.timest).toLocaleDateString("es-ES");
           return { ...pressure, formattedDate };
@@ -34,7 +34,7 @@ export const getPressure = async ({ boardId, data, endDate, filter, startDate } 
     }
     case "Mostrar por fecha": {
       try {
-        const res = await fetchApiAll<Pressure[]>("pressure");
+        const res = await fetchApiAll<Pressure[]>("pressure", setPage, numberPage);
         const filterData = res.filter((pressure) => {
           const formattedDate = new Date(pressure.timest).toISOString().split("T")[0];
           return formattedDate >= String(startDate) && formattedDate <= String(endDate);
@@ -55,7 +55,7 @@ export const getPressure = async ({ boardId, data, endDate, filter, startDate } 
     }
     case "Mostrar por boardId y fecha": {
       try {
-        const res = await fetchApiByBoardId<Pressure[]>("pressure", boardId);
+        const res = await fetchApiByBoardId<Pressure[]>("pressure", boardId, setPage, numberPage);
         const filterData = res.filter((pressure) => {
           const formattedDate = new Date(pressure.timest).toISOString().split("T")[0];
           return formattedDate >= String(startDate) && formattedDate <= String(endDate);
