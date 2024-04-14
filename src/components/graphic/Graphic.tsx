@@ -4,6 +4,8 @@ import Highcharts from "highcharts";
 import { isActuatorFormatted, isPressureFormatted, isTemperatureFormatted } from "../../helpers";
 
 export const Graphic: React.FC<GraphicProps> = ({ data }) => {
+
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let series: any = [];
   let yAxisTitle = 'Valor';

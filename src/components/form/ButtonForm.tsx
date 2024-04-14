@@ -16,7 +16,7 @@ export const ButtonForm = ({ data, isLoading, onResetForm, onSubmit, onTableRese
       {
         (data.length > 0 && !isBoardFormatted(data[0]) && finalActuatorFilterValue !== "Mostrar por calor" && finalActuatorFilterValue !== "Mostrar por frio") &&
         <div className="col-md-2">
-          <button type="button" className="graphic-btn btn btn-success  " onClick={onToggleGraphic}>Alternar entre tabla y gráfica</button>
+          <button type="button" className="graphic-btn btn btn-success" onClick={onToggleGraphic}>Alternar entre tabla y gráfica</button>
         </div>
       }
     </div>

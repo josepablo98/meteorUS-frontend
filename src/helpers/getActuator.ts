@@ -2,11 +2,11 @@ import Swal from 'sweetalert2';
 import { Actuator, GetDataProps } from '../interfaces';
 import { fetchApiAll, fetchApiByBoardId } from '../api';
 
-export const getActuator = async ({ boardId, data, endDate, filter, startDate, actuatorFilter, numberPage, setPage }: GetDataProps) => {
+export const getActuator = async ({ boardId, data, endDate, filter, startDate, actuatorFilter, numberPage, setPage, isGraphicFetching }: GetDataProps) => {
   switch (filter) {
     case "Mostrar todo": {
       try {
-        const res = await fetchApiAll<Actuator[]>("actuator", setPage, numberPage);
+        const res = isGraphicFetching ? await fetchApiAll<Actuator[]>("actuator") : await fetchApiAll<Actuator[]>("actuator", setPage, numberPage);
         const dataFormatted = res.map((actuator) => {
           const formattedDate = new Date(actuator.timest).toLocaleDateString("es-ES");
           return { ...actuator, formattedDate };
@@ -20,7 +20,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
             const filterData = dataFormatted.filter((actuator) => actuator.isHot);
             if (filterData.length === 0) {
               Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator activado por el calor", "error");
-              break;
+              return [];
             }
             data = filterData;
             break;
@@ -29,7 +29,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
             const filterData = dataFormatted.filter((actuator) => actuator.isCold);
             if (filterData.length === 0) {
               Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator activado por el frio", "error");
-              break;
+              return [];
             }
             data = filterData;
             break;
@@ -39,12 +39,13 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
         }
       } catch {
         Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator", "error");
+        return [];
       }
       break;
     }
     case "Mostrar por boardId": {
       try {
-        const res = await fetchApiByBoardId<Actuator[]>("actuator", boardId, setPage, numberPage);
+        const res = isGraphicFetching ? await fetchApiByBoardId<Actuator[]>("actuator", boardId) : await fetchApiByBoardId<Actuator[]>("actuator", boardId, setPage, numberPage);
         const dataFormatted = res.map((actuator) => {
           const formattedDate = new Date(actuator.timest).toLocaleDateString("es-ES");
           return { ...actuator, formattedDate };
@@ -58,7 +59,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
             const filterData = dataFormatted.filter((actuator) => actuator.isHot);
             if (filterData.length === 0) {
               Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator activado por el calor", "error");
-              break;
+              return [];
             }
             data = filterData;
             break;
@@ -67,7 +68,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
             const filterData = dataFormatted.filter((actuator) => actuator.isCold);
             if (filterData.length === 0) {
               Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator activado por el frio", "error");
-              break;
+              return [];
             }
             data = filterData;
             break;
@@ -77,19 +78,20 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
         }
       } catch {
         Swal.fire("Error", "No se encontró ningún registro con el boardId: " + boardId, "error");
+        return [];
       }
       break;
     }
     case "Mostrar por fecha": {
       try {
-        const res = await fetchApiAll<Actuator[]>("actuator", setPage,numberPage);
+        const res = isGraphicFetching ? await fetchApiAll<Actuator[]>("actuator") : await fetchApiAll<Actuator[]>("actuator", setPage, numberPage);
         const filterData = res.filter((actuator) => {
           const formattedDate = new Date(actuator.timest).toISOString().split("T")[0];
           return formattedDate >= String(startDate) && formattedDate <= String(endDate);
         })
         if (filterData.length === 0) {
           Swal.fire("Error", "No se encontró ningún registro con fecha de inicio: " + startDate + " y fecha de fin: " + endDate, "error");
-          break;
+          return [];
         }
         const dataFormatted = filterData.map((actuator) => {
           const formattedDate = new Date(actuator.timest).toLocaleDateString("es-ES");
@@ -104,7 +106,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
             const filterData = dataFormatted.filter((actuator) => actuator.isHot);
             if (filterData.length === 0) {
               Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator activado por el calor", "error");
-              break;
+              return [];
             }
             data = filterData;
             break;
@@ -113,7 +115,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
             const filterData = dataFormatted.filter((actuator) => actuator.isCold);
             if (filterData.length === 0) {
               Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator activado por el frio", "error");
-              break;
+              return [];
             }
             data = filterData;
             break;
@@ -123,19 +125,20 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
         }
       } catch {
         Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator", "error");
+        return [];
       }
       break;
     }
     case "Mostrar por boardId y fecha": {
       try {
-        const res = await fetchApiByBoardId<Actuator[]>("actuator", boardId, setPage, numberPage);
+        const res = isGraphicFetching ? await fetchApiByBoardId<Actuator[]>("actuator", boardId) : await fetchApiByBoardId<Actuator[]>("actuator", boardId, setPage, numberPage);
         const filterData = res.filter((actuator) => {
           const formattedDate = new Date(actuator.timest).toISOString().split("T")[0];
           return formattedDate >= String(startDate) && formattedDate <= String(endDate);
         })
         if (filterData.length === 0) {
           Swal.fire("Error", "No se encontró ningún registro con fecha de inicio: " + startDate + " y fecha de fin: " + endDate, "error");
-          break;
+          return [];
         }
         const dataFormatted = filterData.map((actuator) => {
           const formattedDate = new Date(actuator.timest).toLocaleDateString("es-ES");
@@ -150,7 +153,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
             const filterData = dataFormatted.filter((actuator) => actuator.isHot);
             if (filterData.length === 0) {
               Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator activado por el calor", "error");
-              break;
+              return [];
             }
             data = filterData;
             break;
@@ -159,7 +162,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
             const filterData = dataFormatted.filter((actuator) => actuator.isCold);
             if (filterData.length === 0) {
               Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator activado por el frio", "error");
-              break;
+              return [];
             }
             data = filterData;
             break;
@@ -169,6 +172,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
         }
       } catch {
         Swal.fire("Error", "No se encontró ningún registro con el boardId: " + boardId, "error");
+        return [];
       }
       break;
     }

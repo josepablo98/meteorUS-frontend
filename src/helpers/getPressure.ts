@@ -4,11 +4,11 @@ import { fetchApiAll, fetchApiByBoardId } from "../api";
 
 
 
-export const getPressure = async ({ boardId, data, endDate, filter, startDate, numberPage, setPage } : GetDataProps) => {
+export const getPressure = async ({ boardId, data, endDate, filter, startDate, numberPage, setPage, isGraphicFetching } : GetDataProps) => {
   switch(filter) {
     case "Mostrar todo": {
       try {
-        const res = await fetchApiAll<Pressure[]>("pressure", setPage, numberPage);
+        const res = isGraphicFetching ? await fetchApiAll<Pressure[]>("pressure") : await fetchApiAll<Pressure[]>("pressure", setPage, numberPage);
         const dataFormatted = res.map((pressure) => {
           const formattedDate = new Date(pressure.timest).toLocaleDateString("es-ES");
           return { ...pressure, formattedDate };
@@ -16,12 +16,13 @@ export const getPressure = async ({ boardId, data, endDate, filter, startDate, n
         data = dataFormatted;
       } catch {
         Swal.fire("Error", "No se encontró ningún registro en la tabla Pressure", "error");
+        return [];
       }
       break;
     }
     case "Mostrar por boardId": {
       try {
-        const res = await fetchApiByBoardId<Pressure[]>("pressure", boardId, setPage, numberPage);
+        const res = isGraphicFetching ? await fetchApiByBoardId<Pressure[]>("pressure", boardId) : await fetchApiByBoardId<Pressure[]>("pressure", boardId, setPage, numberPage);
         const dataFormatted = res.map((pressure) => {
           const formattedDate = new Date(pressure.timest).toLocaleDateString("es-ES");
           return { ...pressure, formattedDate };
@@ -29,19 +30,20 @@ export const getPressure = async ({ boardId, data, endDate, filter, startDate, n
         data = dataFormatted;
       } catch {
         Swal.fire("Error", "No se encontró ningún registro con el boardId: " + boardId, "error");
+        return [];
       }
       break;
     }
     case "Mostrar por fecha": {
       try {
-        const res = await fetchApiAll<Pressure[]>("pressure", setPage, numberPage);
+        const res = isGraphicFetching ? await fetchApiAll<Pressure[]>("pressure") : await fetchApiAll<Pressure[]>("pressure", setPage, numberPage);
         const filterData = res.filter((pressure) => {
           const formattedDate = new Date(pressure.timest).toISOString().split("T")[0];
           return formattedDate >= String(startDate) && formattedDate <= String(endDate);
         })
         if(filterData.length === 0) {
           Swal.fire("Error", "No se encontró ningún registro con fecha de inicio: " + startDate + " y fecha de fin: " + endDate, "error");
-          break;
+          return [];
         }
         const dataFormatted = filterData.map((pressure) => {
           const formattedDate = new Date(pressure.timest).toLocaleDateString("es-ES");
@@ -50,19 +52,20 @@ export const getPressure = async ({ boardId, data, endDate, filter, startDate, n
         data = dataFormatted;
       } catch {
         Swal.fire("Error", "No se encontró ningún registro en la tabla Pressure", "error");
+        return [];
       }
       break;
     }
     case "Mostrar por boardId y fecha": {
       try {
-        const res = await fetchApiByBoardId<Pressure[]>("pressure", boardId, setPage, numberPage);
+        const res = isGraphicFetching ? await fetchApiByBoardId<Pressure[]>("pressure", boardId) : await fetchApiByBoardId<Pressure[]>("pressure", boardId, setPage, numberPage);
         const filterData = res.filter((pressure) => {
           const formattedDate = new Date(pressure.timest).toISOString().split("T")[0];
           return formattedDate >= String(startDate) && formattedDate <= String(endDate);
         })
         if(filterData.length === 0) {
           Swal.fire("Error", "No se encontró ningún registro con fecha de inicio: " + startDate + " y fecha de fin: " + endDate, "error");
-          break;
+          return [];
         }
         const dataFormatted = filterData.map((pressure) => {
           const formattedDate = new Date(pressure.timest).toLocaleDateString("es-ES");
@@ -71,6 +74,7 @@ export const getPressure = async ({ boardId, data, endDate, filter, startDate, n
         data = dataFormatted;
       } catch {
         Swal.fire("Error", "No se encontró ningún registro con el boardId: " + boardId, "error");
+        return [];
       }
       break;
     }

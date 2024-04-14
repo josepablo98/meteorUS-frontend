@@ -17,6 +17,7 @@ export const getBoard = async ({ boardId, data, endDate, filter, startDate, numb
         data = dataFormatted;
       } catch {
         Swal.fire("Error", "No se encontró ningún registro en la tabla Board", "error");
+        return [];
       }
       break;
     }
@@ -39,7 +40,7 @@ export const getBoard = async ({ boardId, data, endDate, filter, startDate, numb
         })
         if (filterData.length === 0) {
           Swal.fire("Error", "No se encontró ningún registro con fecha de inicio: " + startDate + " y fecha de fin: " + endDate, "error");
-          break;
+          return [];
         }
 
         const formattedData = filterData.map((board) => {
@@ -50,6 +51,7 @@ export const getBoard = async ({ boardId, data, endDate, filter, startDate, numb
         data = formattedData;
       } catch {
         Swal.fire("Error", "No se encontró ningún registro en la tabla Board", "error");
+        return [];
       }
       break;
     }

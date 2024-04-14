@@ -1,4 +1,3 @@
-import { FieldConfig, FieldInputProps, FormikErrors, FormikTouched } from "formik";
 import { DataProps } from "./types";
 
 export interface TableProps {
@@ -14,13 +13,7 @@ export interface FormTableProps {
   numberPage: number;
 }
 
-export interface FormTableComponentProps {
+export interface PageControlButtonsProps {
   numberPage: number;
-  errors: FormikErrors<FormTableProps>;
-  touched: FormikTouched<FormTableProps>;
-  values: FormTableProps;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  getFieldProps: (nameOrOptions: string | FieldConfig<any>) => FieldInputProps<any>;
-  onNextPreviousPage: (count: number) => void;
-  onSubmit: (e?: React.FormEvent<HTMLFormElement> | undefined) => void;
+  onNextPreviousPage: (count: 1 | -1) => void;
 }

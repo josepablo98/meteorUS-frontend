@@ -7,9 +7,10 @@ export interface GetDataProps {
   endDate: Date | null;
   filter: Filter;
   data: DataProps;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
+  setPage?: React.Dispatch<React.SetStateAction<number>>;
   actuatorFilter?: ActuatorFilter;
-  numberPage: number;
+  numberPage?: number;
+  isGraphicFetching?: boolean; 
 }
 
 export interface Board {

@@ -5,6 +5,7 @@ export const LIMIT = 20;
 let oldPage = 1;
 
 export const fetchApiAll = async<T,> (endpoint: EndPoint, setPage?: React.Dispatch<React.SetStateAction<number>>, page?: number): Promise<T> => {
+  console.log("Estoy haciendo fetching")
   const resp = page ? await fetch(`${BASE_URL}/${endpoint}?limit=${LIMIT}&offset=${(page - 1) * LIMIT}`) : await fetch(`${BASE_URL}/${endpoint}`);
   if (!resp.ok && page === oldPage + 1) {
     setPage && setPage(oldPage);
@@ -15,6 +16,7 @@ export const fetchApiAll = async<T,> (endpoint: EndPoint, setPage?: React.Dispat
 }
 
 export const fetchApiByBoardId = async<T,> (endpoint: EndPoint, boardId: number, setPage?: React.Dispatch<React.SetStateAction<number>>, page?: number): Promise<T> => {
+  console.log("Estoy haciendo fetching")
   const resp = page ? await fetch(`${BASE_URL}/${endpoint}/${boardId}?limit=${LIMIT}&offset=${(page - 1) * LIMIT}`) : await fetch(`${BASE_URL}/${endpoint}/${boardId}`);
   if (!resp.ok && page === oldPage + 1) {
     setPage && setPage(oldPage);
