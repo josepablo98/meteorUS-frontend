@@ -197,19 +197,11 @@ export const App = () => {
   }
 
   const handleSubmitFunction = (values: FormProps, page: number) => {
-
-    const currentDataType = getDataType(data);
-    const storedDataType = localStorage.getItem("dataType");
-    if (currentDataType !== storedDataType) {
-      localStorage.clear();
-      currentDataType && localStorage.setItem("dataType", currentDataType);
-    }
-
-
-    if (!shouldFetch) {
-      setShouldFetch(true);
-      return;
-    }
+    
+    // if (!shouldFetch) {
+    //   setShouldFetch(true);
+    //   return;
+    // }
 
     setIsLoading(true);
     const { boardId, endDate, filter, startDate, actuatorFilter } = values;
@@ -292,7 +284,6 @@ export const App = () => {
     if (data.length > 0) {
       const currentDataType = getDataType(data);
       const storedDataType = localStorage.getItem("dataType") || "";
-      console.log({ currentDataType, storedDataType })
       if (currentDataType !== storedDataType) {
         localStorage.clear();
         currentDataType && localStorage.setItem("dataType", currentDataType);

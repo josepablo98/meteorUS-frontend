@@ -16,7 +16,7 @@ export const getBoard = async ({ boardId, data, endDate, filter, startDate, numb
         })
         data = dataFormatted;
       } catch {
-        Swal.fire("Error", "No se encontró ningún registro en la tabla Board", "error");
+        Swal.fire("Error", "No se encontró ningún registro en la tabla Board o no hay más páginas disponibles", "error");
         return [];
       }
       break;
@@ -39,7 +39,7 @@ export const getBoard = async ({ boardId, data, endDate, filter, startDate, numb
           return formattedDate >= String(startDate) && formattedDate <= String(endDate);
         })
         if (filterData.length === 0) {
-          Swal.fire("Error", "No se encontró ningún registro con fecha de inicio: " + startDate + " y fecha de fin: " + endDate, "error");
+          Swal.fire("Error", "No se encontró ningún registro con fecha de inicio: " + new Date(startDate!).toLocaleDateString("es-ES") + " y fecha de fin: " + new Date(endDate!).toLocaleDateString("es-ES") + " o no hay más páginas disponibles", "error");
           return [];
         }
 
@@ -50,7 +50,7 @@ export const getBoard = async ({ boardId, data, endDate, filter, startDate, numb
 
         data = formattedData;
       } catch {
-        Swal.fire("Error", "No se encontró ningún registro en la tabla Board", "error");
+        Swal.fire("Error", "No se encontró ningún registro en la tabla Board o no hay más páginas disponibles", "error");
         return [];
       }
       break;

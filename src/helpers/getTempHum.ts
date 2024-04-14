@@ -13,7 +13,7 @@ export const getTempHum = async ({ boardId, data, endDate, filter, startDate, nu
         })
         data = dataFormatted;
       } catch {
-        Swal.fire("Error", "No se encontró ningún registro en la tabla Temperature/Humidity", "error");
+        Swal.fire("Error", "No se encontró ningún registro en la tabla Temperature/Humidity o no hay más páginas disponibles", "error");
         return [];
       }
       break;
@@ -27,7 +27,7 @@ export const getTempHum = async ({ boardId, data, endDate, filter, startDate, nu
         })
         data = formattedData;
       } catch {
-        Swal.fire("Error", "No se encontró ningún registro con el boardId: " + boardId, "error");
+        Swal.fire("Error", "No se encontró ningún registro con el boardId: " + boardId + " o no hay más páginas disponibles", "error");
         return [];
       }
       break;
@@ -40,7 +40,7 @@ export const getTempHum = async ({ boardId, data, endDate, filter, startDate, nu
           return formattedDate >= String(startDate) && formattedDate <= String(endDate);
         })
         if(filterData.length === 0) {
-          Swal.fire("Error", "No se encontró ningún registro con fecha de inicio: " + startDate + " y fecha de fin: " + endDate, "error");
+          Swal.fire("Error", "No se encontró ningún registro con fecha de inicio: " + new Date(startDate!).toLocaleDateString("es-ES") + " y fecha de fin: " + new Date(endDate!).toLocaleDateString("es-ES") + " o no hay más páginas disponibles", "error");
           return [];
         }
         const formattedData = filterData.map((tempHum) => {
@@ -49,7 +49,7 @@ export const getTempHum = async ({ boardId, data, endDate, filter, startDate, nu
         })
         data = formattedData;
       } catch {
-        Swal.fire("Error", "No se encontró ningún registro en la tabla Temperature/Humidity", "error");
+        Swal.fire("Error", "No se encontró ningún registro en la tabla Temperature/Humidity o no hay más páginas disponibles", "error");
         return [];
       }
       break;
@@ -62,7 +62,7 @@ export const getTempHum = async ({ boardId, data, endDate, filter, startDate, nu
           return formattedDate >= String(startDate) && formattedDate <= String(endDate);
         })
         if(filterData.length === 0) {
-          Swal.fire("Error", "No se encontró ningún registro con fecha de inicio: " + startDate + " y fecha de fin: " + endDate, "error");
+          Swal.fire("Error", "No se encontró ningún registro con fecha de inicio: " + new Date(startDate!).toLocaleDateString("es-ES") + " y fecha de fin: " + new Date(endDate!).toLocaleDateString("es-ES") + " o no hay más páginas disponibles", "error");
           return [];
         }
         const formattedData = filterData.map((tempHum) => {
@@ -71,7 +71,7 @@ export const getTempHum = async ({ boardId, data, endDate, filter, startDate, nu
         })
         data = formattedData;
       } catch {
-        Swal.fire("Error", "No se encontró ningún registro con el boardId: " + boardId, "error");
+        Swal.fire("Error", "No se encontró ningún registro con el boardId: " + boardId + " o no hay más páginas disponibles", "error");
         return [];
       }
       break;

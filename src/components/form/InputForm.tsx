@@ -49,7 +49,7 @@ export const InputForm = ({ errors, getFieldProps, isBoardId, isDate, touched }:
           onBlur={fieldPropsEndDate.onBlur}
           value={String(fieldPropsEndDate.value)}
           name={fieldPropsEndDate.name}
-          style={{ borderColor: (errors.endDate && !isDate) ? "red" : "", borderWidth: (errors.endDate && !isDate) ? "2px" : ""}}
+          style={{ borderColor: (errors.endDate && touched.endDate && !isDate) ? "red" : "", borderWidth: (errors.endDate && !isDate) ? "2px" : ""}}
         />
         {(touched.endDate && errors.endDate && !isDate) && <ErrorForm error={String(errors.endDate)}/>}
       </div>

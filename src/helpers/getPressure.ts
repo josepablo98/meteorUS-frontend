@@ -15,7 +15,7 @@ export const getPressure = async ({ boardId, data, endDate, filter, startDate, n
         })
         data = dataFormatted;
       } catch {
-        Swal.fire("Error", "No se encontró ningún registro en la tabla Pressure", "error");
+        Swal.fire("Error", "No se encontró ningún registro en la tabla Pressure/Altitude o no hay más páginas disponibles", "error");
         return [];
       }
       break;
@@ -29,7 +29,7 @@ export const getPressure = async ({ boardId, data, endDate, filter, startDate, n
         })
         data = dataFormatted;
       } catch {
-        Swal.fire("Error", "No se encontró ningún registro con el boardId: " + boardId, "error");
+        Swal.fire("Error", "No se encontró ningún registro con el boardId: " + boardId + " o no hay más páginas disponibles", "error");
         return [];
       }
       break;
@@ -42,7 +42,7 @@ export const getPressure = async ({ boardId, data, endDate, filter, startDate, n
           return formattedDate >= String(startDate) && formattedDate <= String(endDate);
         })
         if(filterData.length === 0) {
-          Swal.fire("Error", "No se encontró ningún registro con fecha de inicio: " + startDate + " y fecha de fin: " + endDate, "error");
+          Swal.fire("Error", "No se encontró ningún registro con fecha de inicio: " + new Date(startDate!).toLocaleDateString("es-ES") + " y fecha de fin: " + new Date(endDate!).toLocaleDateString("es-ES") + " o no hay más páginas disponibles", "error");
           return [];
         }
         const dataFormatted = filterData.map((pressure) => {
@@ -51,7 +51,7 @@ export const getPressure = async ({ boardId, data, endDate, filter, startDate, n
         })
         data = dataFormatted;
       } catch {
-        Swal.fire("Error", "No se encontró ningún registro en la tabla Pressure", "error");
+        Swal.fire("Error", "No se encontró ningún registro en la tabla Pressure/Altitude o no hay más páginas disponibles", "error");
         return [];
       }
       break;
@@ -64,7 +64,7 @@ export const getPressure = async ({ boardId, data, endDate, filter, startDate, n
           return formattedDate >= String(startDate) && formattedDate <= String(endDate);
         })
         if(filterData.length === 0) {
-          Swal.fire("Error", "No se encontró ningún registro con fecha de inicio: " + startDate + " y fecha de fin: " + endDate, "error");
+          Swal.fire("Error", "No se encontró ningún registro con fecha de inicio: " + new Date(startDate!).toLocaleDateString("es-ES") + " y fecha de fin: " + new Date(endDate!).toLocaleDateString("es-ES") + " o no hay más páginas disponibles", "error");
           return [];
         }
         const dataFormatted = filterData.map((pressure) => {
@@ -73,7 +73,7 @@ export const getPressure = async ({ boardId, data, endDate, filter, startDate, n
         })
         data = dataFormatted;
       } catch {
-        Swal.fire("Error", "No se encontró ningún registro con el boardId: " + boardId, "error");
+        Swal.fire("Error", "No se encontró ningún registro con el boardId: " + boardId + " o no hay más páginas disponibles", "error");
         return [];
       }
       break;
