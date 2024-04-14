@@ -197,11 +197,6 @@ export const App = () => {
   }
 
   const handleSubmitFunction = (values: FormProps, page: number) => {
-    
-    // if (!shouldFetch) {
-    //   setShouldFetch(true);
-    //   return;
-    // }
 
     setIsLoading(true);
     const { boardId, endDate, filter, startDate, actuatorFilter } = values;
