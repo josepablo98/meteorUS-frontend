@@ -2,7 +2,7 @@ import Swal from 'sweetalert2';
 import { Actuator, GetDataProps } from '../interfaces';
 import { fetchApiAll, fetchApiByBoardId } from '../api';
 
-export const getActuator = async ({ boardId, data, endDate, filter, startDate, actuatorFilter, numberPage, setPage, isGraphicFetching }: GetDataProps) => {
+export const getActuator = async ({ boardId, data, endDate, filter, startDate, actuatorFilter, numberPage, setPage, isGraphicFetching, isFormButtons }: GetDataProps) => {
   switch (filter) {
     case "Mostrar todo": {
       try {
@@ -19,7 +19,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
           case "Mostrar por calor": {
             const filterData = dataFormatted.filter((actuator) => actuator.isHot);
             if (filterData.length === 0) {
-              Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator activado por el calor o no hay más páginas disponibles", "error");
+              !isFormButtons && Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator activado por el calor", "error");
               return [];
             }
             data = filterData;
@@ -28,7 +28,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
           case "Mostrar por frio": {
             const filterData = dataFormatted.filter((actuator) => actuator.isCold);
             if (filterData.length === 0) {
-              Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator activado por el frio o no hay más páginas disponibles", "error");
+              !isFormButtons && Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator activado por el frio", "error");
               return [];
             }
             data = filterData;
@@ -38,7 +38,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
             break;
         }
       } catch {
-        Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator o no hay más páginas disponibles", "error");
+        !isFormButtons && Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator", "error");
         return [];
       }
       break;
@@ -58,7 +58,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
           case "Mostrar por calor": {
             const filterData = dataFormatted.filter((actuator) => actuator.isHot);
             if (filterData.length === 0) {
-              Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator activado por el calor o no hay más páginas disponibles", "error");
+              !isFormButtons && Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator activado por el calor", "error");
               return [];
             }
             data = filterData;
@@ -67,7 +67,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
           case "Mostrar por frio": {
             const filterData = dataFormatted.filter((actuator) => actuator.isCold);
             if (filterData.length === 0) {
-              Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator activado por el frio o no hay más páginas disponibles", "error");
+              !isFormButtons && Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator activado por el frio", "error");
               return [];
             }
             data = filterData;
@@ -77,7 +77,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
             break;
         }
       } catch {
-        Swal.fire("Error", "No se encontró ningún registro con el boardId: " + boardId + " o no hay más páginas disponibles", "error");
+        !isFormButtons && Swal.fire("Error", "No se encontró ningún registro con el boardId: " + boardId, "error");
         return [];
       }
       break;
@@ -90,7 +90,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
           return formattedDate >= String(startDate) && formattedDate <= String(endDate);
         })
         if (filterData.length === 0) {
-          Swal.fire("Error", "No se encontró ningún registro con fecha de inicio: " + new Date(startDate!).toLocaleDateString("es-ES") + " y fecha de fin: " + new Date(endDate!).toLocaleDateString("es-ES") + " o no hay más páginas disponibles", "error");
+          !isFormButtons && Swal.fire("Error", "No se encontró ningún registro con fecha de inicio: " + new Date(startDate!).toLocaleDateString("es-ES") + " y fecha de fin: " + new Date(endDate!).toLocaleDateString("es-ES"), "error");
           return [];
         }
         const dataFormatted = filterData.map((actuator) => {
@@ -105,7 +105,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
           case "Mostrar por calor": {
             const filterData = dataFormatted.filter((actuator) => actuator.isHot);
             if (filterData.length === 0) {
-              Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator activado por el calor o no hay más páginas disponibles", "error");
+              !isFormButtons && Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator activado por el calor", "error");
               return [];
             }
             data = filterData;
@@ -114,7 +114,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
           case "Mostrar por frio": {
             const filterData = dataFormatted.filter((actuator) => actuator.isCold);
             if (filterData.length === 0) {
-              Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator activado por el frio o no hay más páginas disponibles", "error");
+              !isFormButtons && Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator activado por el frio", "error");
               return [];
             }
             data = filterData;
@@ -124,7 +124,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
             break;
         }
       } catch {
-        Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator o no hay más páginas disponibles", "error");
+        !isFormButtons && Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator", "error");
         return [];
       }
       break;
@@ -137,7 +137,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
           return formattedDate >= String(startDate) && formattedDate <= String(endDate);
         })
         if (filterData.length === 0) {
-          Swal.fire("Error", "No se encontró ningún registro con fecha de inicio: " + new Date(startDate!).toLocaleDateString("es-ES") + " y fecha de fin: " + new Date(endDate!).toLocaleDateString("es-ES") + " o no hay más páginas disponibles", "error");
+          !isFormButtons && Swal.fire("Error", "No se encontró ningún registro con fecha de inicio: " + new Date(startDate!).toLocaleDateString("es-ES") + " y fecha de fin: " + new Date(endDate!).toLocaleDateString("es-ES"), "error");
           return [];
         }
         const dataFormatted = filterData.map((actuator) => {
@@ -152,7 +152,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
           case "Mostrar por calor": {
             const filterData = dataFormatted.filter((actuator) => actuator.isHot);
             if (filterData.length === 0) {
-              Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator activado por el calor o no hay más páginas disponibles", "error");
+              !isFormButtons && Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator activado por el calor", "error");
               return [];
             }
             data = filterData;
@@ -161,7 +161,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
           case "Mostrar por frio": {
             const filterData = dataFormatted.filter((actuator) => actuator.isCold);
             if (filterData.length === 0) {
-              Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator activado por el frio o no hay más páginas disponibles", "error");
+              !isFormButtons && Swal.fire("Error", "No se encontró ningún registro en la tabla Actuator activado por el frio", "error");
               return [];
             }
             data = filterData;
@@ -171,7 +171,7 @@ export const getActuator = async ({ boardId, data, endDate, filter, startDate, a
             break;
         }
       } catch {
-        Swal.fire("Error", "No se encontró ningún registro con el boardId: " + boardId + " o no hay más páginas disponibles", "error");
+        !isFormButtons && Swal.fire("Error", "No se encontró ningún registro con el boardId: " + boardId, "error");
         return [];
       }
       break;

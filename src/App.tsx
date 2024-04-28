@@ -1,7 +1,7 @@
 import "./styles";
 import { useCallback, useEffect, useState } from "react";
 import { ActuatorFilter, ActuatorFormatted, BoardFormatted, DataProps, Filter, FormProps, PressureFormatted, Register, TemperatureFormatted } from "./interfaces";
-import { getBoard, getTempHum, getActuator, getPressure, getDataType } from "./helpers";
+import { getBoard, getTempHum, getActuator, getPressure } from "./helpers";
 import { Form } from "./components/form/Form";
 import { Table } from "./components";
 import { formSchema } from "./schemas";
@@ -12,10 +12,10 @@ import { getSameJson } from "./helpers/getSameJson";
 import { LIMIT } from "./api";
 import { PageControlButtons } from "./components/table/PageControlButtons";
 
-const MQTT_SERVER = "broker.hivemq.com";
-const MQTT_PORT = 8884;
+const MQTT_SERVER = "localhost";
+const MQTT_PORT = 9001;
 
-const client = mqtt.connect(`wss://${MQTT_SERVER}:${MQTT_PORT}/mqtt`).setMaxListeners(200);
+const client = mqtt.connect(`ws://${MQTT_SERVER}:${MQTT_PORT}/mqtt`).setMaxListeners(200);
 
 export const App = () => {
 
@@ -40,7 +40,7 @@ export const App = () => {
   const [finalRegisterValue, setFinalRegisterValue] = useState<Register>("-");
   const [finalActuatorFilterValue, setFinalActuatorFilterValue] = useState<ActuatorFilter>("-");
   const [page, setPage] = useState(1);
-  const [shouldFetch, setShouldFetch] = useState(true);
+  const [isNextPage, setIsNextPage] = useState(false);
 
   const { values, handleSubmit, handleReset, errors, touched, getFieldProps, setFieldValue } = useFormik({
     initialValues: initialForm,
@@ -124,9 +124,6 @@ export const App = () => {
     setPage(1);
   }, [finalRegisterValue, finalFilterValue, finalActuatorFilterValue])
 
-
-
-
   const handleMessage = useCallback((topic: string, message: Buffer): void => {
     let newData = JSON.parse(message.toString());
     newData = { ...newData, formattedDate: new Date(newData.timest).toLocaleDateString("es-ES") };
@@ -140,6 +137,14 @@ export const App = () => {
     delete newData.ok;
 
     const sameJson = getSameJson(data[0], newData);
+    console.log({ nextPage: isNextPage, data: data.length })
+    if (data.length === 20 && sameJson) {
+      console.log("paso por el if")
+      setIsNextPage(true);
+    } else if (data.length !== 20) {
+      console.log("paso por el else")
+      setIsNextPage(false);
+    }
 
     // Si newData no existe, añádelo al estado
     if (data.length > 0 && (data.length < LIMIT || isGraphic)) {
@@ -165,7 +170,7 @@ export const App = () => {
       }
     }
 
-  }, [data, finalActuatorFilterValue, finalFilterValue, isGraphic]);
+  }, [data, finalActuatorFilterValue, finalFilterValue, isGraphic, isNextPage]);
 
 
   useEffect(() => {
@@ -184,12 +189,11 @@ export const App = () => {
     return () => {
       client.off("message", handleMessage);
     };
-  }, [data, handleMessage]);
+  }, [handleMessage]);
 
 
   const onTableReset = () => {
     setData([]);
-    localStorage.clear();
   }
 
   const onToggleGraphic = () => {
@@ -204,7 +208,7 @@ export const App = () => {
     switch (values.register) {
 
       case "Registros de placas":
-        getBoard({ boardId, data, endDate, filter, startDate, numberPage: page, setPage })
+        getBoard({ boardId, data, endDate, filter, startDate, numberPage: page, setPage, isFormButtons: false })
           .then((result) => {
             setData(result as BoardFormatted[])
           })
@@ -212,13 +216,13 @@ export const App = () => {
         break;
       case "Registros de temperaturas y humedad":
         if (!isGraphic) {
-          getTempHum({ boardId, data, endDate, filter, startDate, numberPage: page, setPage, isGraphicFetching: false })
+          getTempHum({ boardId, data, endDate, filter, startDate, numberPage: page, setPage, isGraphicFetching: false, isFormButtons: false })
             .then((result) => {
               setData(result as TemperatureFormatted[])
             })
             .catch((error) => console.error(error))
         } else {
-          getTempHum({ boardId, data, endDate, filter, startDate, isGraphicFetching: true })
+          getTempHum({ boardId, data, endDate, filter, startDate, isGraphicFetching: true, isFormButtons: false })
             .then((result) => {
               setData(result as TemperatureFormatted[])
             })
@@ -227,13 +231,13 @@ export const App = () => {
         break;
       case "Registros de presion y altitud":
         if (!isGraphic) {
-          getPressure({ boardId, data, endDate, filter, startDate, numberPage: page, setPage, isGraphicFetching: false })
+          getPressure({ boardId, data, endDate, filter, startDate, numberPage: page, setPage, isGraphicFetching: false, isFormButtons: false })
             .then((result) => {
               setData(result as PressureFormatted[]);
             })
             .catch((error) => console.error(error))
         } else {
-          getPressure({ boardId, data, endDate, filter, startDate, isGraphicFetching: true })
+          getPressure({ boardId, data, endDate, filter, startDate, isGraphicFetching: true, isFormButtons: false })
             .then((result) => {
               setData(result as PressureFormatted[])
             })
@@ -242,13 +246,13 @@ export const App = () => {
         break;
       case "Registros de actuadores":
         if (!isGraphic) {
-          getActuator({ boardId, data, endDate, filter, startDate, actuatorFilter, numberPage: page, setPage, isGraphicFetching: false })
+          getActuator({ boardId, data, endDate, filter, startDate, actuatorFilter, numberPage: page, setPage, isGraphicFetching: false, isFormButtons: false })
             .then((result) => {
               setData(result as ActuatorFormatted[])
             })
             .catch((error) => console.error(error))
         } else {
-          getActuator({ boardId, data, endDate, filter, startDate, actuatorFilter, isGraphicFetching: true })
+          getActuator({ boardId, data, endDate, filter, startDate, actuatorFilter, isGraphicFetching: true, isFormButtons: false })
             .then((result) => {
               setData(result as ActuatorFormatted[])
             })
@@ -270,36 +274,12 @@ export const App = () => {
   }
 
   useEffect(() => {
-    if (!shouldFetch) return;
     handleSubmitFunction(values, page);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, isGraphic])
 
   const onNextPreviousPage = (count: number) => {
-    if (data.length > 0) {
-      const currentDataType = getDataType(data);
-      const storedDataType = localStorage.getItem("dataType") || "";
-      if (currentDataType !== storedDataType) {
-        localStorage.clear();
-        currentDataType && localStorage.setItem("dataType", currentDataType);
-      }
-      if (count === 1) {
-        localStorage.setItem(`page${page}`, JSON.stringify(data));
-        const nextPageData = localStorage.getItem(`page${page + 1}`);
-        if (nextPageData) {
-          setShouldFetch(false);
-          setData(JSON.parse(nextPageData));
-        } else {
-          setShouldFetch(true);
-        }
-      } else {
-        if (page === 1) return;
-        setShouldFetch(false);
-        const previousData = JSON.parse(localStorage.getItem(`page${page - 1}`) || "[]");
-        setData(previousData);
-      }
-      setPage(prev => Math.max(1, prev + count));
-    }
+    setPage(prev => Math.max(1, prev + count));
   }
 
   return (
@@ -329,7 +309,16 @@ export const App = () => {
             <Table data={data} />
             <PageControlButtons
               numberPage={page}
+              isNextPage={isNextPage}
               onNextPreviousPage={onNextPreviousPage}
+              finalActuatorFilterValue={finalActuatorFilterValue}
+              finalFilterValue={finalFilterValue}
+              finalRegisterValue={finalRegisterValue}
+              boardId={values.boardId}
+              startDate={values.startDate}
+              endDate={values.endDate}
+              data={data}
+
             />
           </>
         )

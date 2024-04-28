@@ -7,6 +7,7 @@ export interface GetDataProps {
   endDate: Date | null;
   filter: Filter;
   data: DataProps;
+  isFormButtons: boolean;
   setPage?: React.Dispatch<React.SetStateAction<number>>;
   actuatorFilter?: ActuatorFilter;
   numberPage?: number;
