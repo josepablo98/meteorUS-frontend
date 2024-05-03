@@ -17,17 +17,16 @@ const MQTT_PORT = 9001;
 
 const client = mqtt.connect(`ws://${MQTT_SERVER}:${MQTT_PORT}/mqtt`).setMaxListeners(200);
 
+const initialForm: FormProps = {
+  register: "-",
+  filter: "-",
+  boardId: 1,
+  startDate: null,
+  endDate: null,
+  actuatorFilter: "-"
+}
+
 export const App = () => {
-
-  const initialForm: FormProps = {
-    register: "-",
-    filter: "-",
-    boardId: 1,
-    startDate: null,
-    endDate: null,
-    actuatorFilter: "-"
-  }
-
 
   const [data, setData] = useState<DataProps>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -137,12 +136,9 @@ export const App = () => {
     delete newData.ok;
 
     const sameJson = getSameJson(data[0], newData);
-    console.log({ nextPage: isNextPage, data: data.length })
     if (data.length === 20 && sameJson) {
-      console.log("paso por el if")
       setIsNextPage(true);
     } else if (data.length !== 20) {
-      console.log("paso por el else")
       setIsNextPage(false);
     }
 
@@ -170,6 +166,7 @@ export const App = () => {
       }
     }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, finalActuatorFilterValue, finalFilterValue, isGraphic, isNextPage]);
 
 
@@ -185,7 +182,6 @@ export const App = () => {
 
     client.on("message", handleMessage);
 
-    // Limpiar el evento al desmontar el componente
     return () => {
       client.off("message", handleMessage);
     };
